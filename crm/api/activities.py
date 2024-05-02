@@ -107,6 +107,7 @@ def get_deal_activities(name):
 			"creation": comment.creation,
 			"owner": comment.owner,
 			"content": comment.content,
+			"attachments": get_attachments('Comment', comment.name),
 			"is_lead": False,
 		}
 		activities.append(activity)
@@ -123,7 +124,7 @@ def get_deal_activities(name):
 				"recipients": communication.recipients,
 				"cc": communication.cc,
 				"bcc": communication.bcc,
-				"attachments": get_attachments(communication.name),
+				"attachments": get_attachments('Communication', communication.name),
 				"read_by_recipient": communication.read_by_recipient,
 			},
 			"is_lead": False,
@@ -218,6 +219,7 @@ def get_lead_activities(name):
 			"creation": comment.creation,
 			"owner": comment.owner,
 			"content": comment.content,
+			"attachments": get_attachments('Comment', comment.name),
 			"is_lead": True,
 		}
 		activities.append(activity)
@@ -234,7 +236,7 @@ def get_lead_activities(name):
 				"recipients": communication.recipients,
 				"cc": communication.cc,
 				"bcc": communication.bcc,
-				"attachments": get_attachments(communication.name),
+				"attachments": get_attachments('Communication', communication.name),
 				"read_by_recipient": communication.read_by_recipient,
 			},
 			"is_lead": True,
@@ -375,10 +377,10 @@ def get_design_activities(name):
 
 
 @redis_cache()
-def get_attachments(name):
+def get_attachments(doctype, name):
 	return frappe.db.get_all(
 		"File",
-		filters={"attached_to_doctype": "Communication", "attached_to_name": name},
+		filters={"attached_to_doctype": doctype, "attached_to_name": name},
 		fields=["name", "file_name", "file_url", "file_size", "is_private"],
 	)
 

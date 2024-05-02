@@ -78,12 +78,6 @@
     </div>
     <div class="m-2 flex flex-col gap-1">
       <SidebarLink
-        :label="__('Docs')"
-        :isCollapsed="isSidebarCollapsed"
-        icon="book-open"
-        @click="() => openDocs()"
-      />
-      <SidebarLink
         :label="isSidebarCollapsed ? __('Expand') : __('Collapse')"
         :isCollapsed="isSidebarCollapsed"
         @click="isSidebarCollapsed = !isSidebarCollapsed"
@@ -237,9 +231,5 @@ function getIcon(routeName) {
     default:
       return PinIcon
   }
-}
-
-function openDocs() {
-  window.open('https://docs.frappe.io/crm', '_blank')
 }
 </script>
