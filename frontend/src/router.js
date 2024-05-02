@@ -33,6 +33,18 @@ const routes = [
     props: true,
   },
   {
+    path: '/designs',
+    name: 'Designs',
+    component: () => import('@/pages/Designs.vue'),
+    meta: { scrollPos: { top: 0, left: 0 } },
+  },
+  {
+    path: '/designs/:designId',
+    name: 'Design',
+    component: () => import('@/pages/Design.vue'),
+    props: true,
+  },
+  {
     path: '/notes',
     name: 'Notes',
     component: () => import('@/pages/Notes.vue'),

@@ -142,6 +142,11 @@ const links = [
     to: 'Deals',
   },
   {
+    label: 'Designs',
+    icon: DealsIcon,
+    to: 'Designs',
+  },
+  {
     label: 'Contacts',
     icon: ContactsIcon,
     to: 'Contacts',
@@ -182,21 +187,21 @@ const allViews = computed(() => {
       views: links,
     },
   ]
-  if (getPublicViews().length) {
-    _views.push({
-      name: 'Public views',
-      opened: true,
-      views: parseView(getPublicViews()),
-    })
-  }
+  // if (getPublicViews().length) {
+  //   _views.push({
+  //     name: 'Public views',
+  //     opened: true,
+  //     views: parseView(getPublicViews()),
+  //   })
+  // }
 
-  if (getPinnedViews().length) {
-    _views.push({
-      name: 'Pinned views',
-      opened: true,
-      views: parseView(getPinnedViews()),
-    })
-  }
+  // if (getPinnedViews().length) {
+  //   _views.push({
+  //     name: 'Pinned views',
+  //     opened: true,
+  //     views: parseView(getPinnedViews()),
+  //   })
+  // }
   return _views
 })
 
@@ -218,6 +223,8 @@ function getIcon(routeName) {
     case 'Leads':
       return LeadsIcon
     case 'Deals':
+      return DealsIcon
+    case 'Designs':
       return DealsIcon
     case 'Contacts':
       return ContactsIcon
