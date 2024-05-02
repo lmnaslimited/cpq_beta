@@ -45,10 +45,6 @@
 
 ## Getting Started
 
-### Cloud Hosting
-
-Get started with your personal or business site with a few clicks on [Frappe Cloud](https://frappecloud.com/marketplace/apps/crm).
-
 ### Self-hosting
 
 If you prefer self-hosting, follow the official [Frappe Bench Installation](https://github.com/frappe/bench#installation) instructions.
@@ -57,7 +53,7 @@ If you prefer self-hosting, follow the official [Frappe Bench Installation](http
 
 ### Codespaces
 
-1. Open [this link](https://github.com/codespaces/new?hide_repo_select=true&ref=master&repo=668199241&skip_quickstart=true&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&geo=SoutheastAsia) and click on "Create Codespace".
+1. Open [this link](https://github.com/codespaces/new?hide_repo_select=true&ref=develop&repo=794992413&skip_quickstart=true&machine=basicLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&geo=SoutheastAsia) and click on "Create Codespace".
 2. Wait for initialization (~15 mins).
 3. Run `bench start` from the terminal tab.
 4. Click on the link beside "8000" port under "Ports" tab.
@@ -69,7 +65,7 @@ If you prefer self-hosting, follow the official [Frappe Bench Installation](http
 1. [Install Bench](https://github.com/frappe/bench).
 2. Install Frappe CRM app:
     ```sh
-    $ bench get-app crm
+    $ bench get-app https://github.com/lmnaslimited/cpq.git
     ```
 3. Create a site with the crm app:
     ```sh
