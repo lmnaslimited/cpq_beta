@@ -49,11 +49,12 @@
     >
       <DealsIcon class="h-10 w-10" />
       <span>{{ __('No Designs Found') }}</span>
-      <Button :label="__('Create')" @click="showDealModal = true">
+      <Button :label="__('Create')" @click="showDesignModal = true">
         <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
       </Button>
     </div>
   </div>
+  <DesignModal v-model="showDesignModal" />
 </template>
 
 <script setup>
@@ -62,6 +63,7 @@ import CustomActions from '@/components/CustomActions.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import DesignsListView from '@/components/ListViews/DesignsListView.vue'
+import DesignModal from '@/components/Modals/DesignModal.vue'
 import { usersStore } from '@/stores/users'
 import { organizationsStore } from '@/stores/organizations'
 
@@ -84,7 +86,7 @@ const { getOrganization } = organizationsStore()
 const { getDealStatus } = statusesStore()
 
 const designsListView = ref(null)
-// const showDesignModal = ref(false)
+const showDesignModal = ref(false)
 
 // desigs data is loaded in the ViewControls component
 const designs = ref({})
