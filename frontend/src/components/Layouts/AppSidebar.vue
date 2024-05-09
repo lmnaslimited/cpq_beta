@@ -104,6 +104,7 @@ import PinIcon from '@/components/Icons/PinIcon.vue'
 import UserDropdown from '@/components/UserDropdown.vue'
 import LeadsIcon from '@/components/Icons/LeadsIcon.vue'
 import DealsIcon from '@/components/Icons/DealsIcon.vue'
+import DashboardIcon from '@/components/Icons/DashboardIcon.vue'
 import ContactsIcon from '@/components/Icons/ContactsIcon.vue'
 import OrganizationsIcon from '@/components/Icons/OrganizationsIcon.vue'
 import NoteIcon from '@/components/Icons/NoteIcon.vue'
@@ -170,6 +171,11 @@ const links = [
     icon: EmailIcon,
     to: 'Email Templates',
   },
+  {
+    label: 'Dashboard',
+    icon: DashboardIcon,
+    to: 'Dashboard',
+  },
 ]
 
 const allViews = computed(() => {
@@ -228,6 +234,8 @@ function getIcon(routeName) {
       return NoteIcon
     case 'Call Logs':
       return PhoneIcon
+      case 'Dashboard':
+      return DashboardIcon
     default:
       return PinIcon
   }
