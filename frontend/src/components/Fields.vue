@@ -62,6 +62,21 @@
               </Tooltip>
             </template>
           </Link>
+          <div v-else-if="field.type === 'range'">
+            <input
+                type="range"
+                :class="field.name"
+                :min="field.min"
+                :max="field.max"
+                :step="field.step"
+                style="width:250px;"
+                variant="outline"
+                value="0"
+                @input="handleChangeRange(field.id,$event.target.value)"
+              />
+              <p :id=field.id class="text-gray-600" contenteditable="true" @input="updateRangeValue(field.name, $event.target.innerText)">0</p>
+          
+          </div>
           <div v-else-if="field.type === 'dropdown'">
             <NestedPopover>
               <template #target="{ open }">
@@ -138,10 +153,29 @@ const props = defineProps({
   sections: Array,
   data: Object,
 })
+
+const handleChangeRange = (id,value) => {
+   // Update the value displayed in the div with ID 'size'
+  const sizeElement = document.getElementById(id);
+  if (sizeElement) {
+    sizeElement.innerHTML = value;
+  }
+};
+const updateRangeValue=(id, value) => {
+  const rangeElement = document.getElementsByClassName(id)
+  if (rangeElement.length > 0) {
+    // Assuming there's only one range input with this class
+    rangeElement[0].value = value;
+  }
+}
+
 </script>
 
 <style scoped>
 :deep(.form-control.prefix select) {
   padding-left: 2rem;
 }
+p[contenteditable="true"]:focus {
+    outline: none;
+  }
 </style>
