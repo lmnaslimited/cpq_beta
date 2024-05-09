@@ -69,8 +69,8 @@
                 :min="field.min"
                 :max="field.max"
                 :step="field.step"
-                style="width:250px;"
-                variant="outline"
+                style="width:250px;  accent-color: black;"
+                variant="ghost"
                 value="0"
                 @input="handleChangeRange(field.id,$event.target.value)"
               />
@@ -178,4 +178,5 @@ const updateRangeValue=(id, value) => {
 p[contenteditable="true"]:focus {
     outline: none;
   }
+ 
 </style>

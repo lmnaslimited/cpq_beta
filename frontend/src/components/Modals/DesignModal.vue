@@ -22,32 +22,46 @@
             <option value="DTTHZ2N">DTTHZ2N</option>
             <option value="RGB">RGB</option>
           </select> -->
+          <!-- <div class="rounded-md overflow-hidden" style="width: 200px;">
           <FormControl
-                type="select"
-                :options="[
-                  {
-                    label: '',
-                    value: '',
-                  },
-                  {
-                    label: 'DTTHZ2N',
-                    value: 'DTTHZ2N',
-                  },
-                  {
-                    label: 'RGB',
-                    value: 'RGB',
-                  },
-                ]"
-                size="150px"
-                placeholder=""
-                :disabled="false"
-                label=""
-                v-model="selectedDesignType"
-              />
+            type="select"
+            class="design-selector"
+            :options="[
+              { label: '', value: '' },
+              { label: 'DTTHZ2N', value: 'DTTHZ2N' },
+              { label: 'RGB', value: 'RGB' },
+            ]"
+            size="200px"
+            placeholder=""
+            :disabled="false"
+            label=""
+            v-model="selectedDesignType"
+          />
+        </div> -->
+       
+        <Select
+          :options="[
+            {
+              label: '',
+              value: '',
+            },
+            {
+              label: 'DTTHZ2N',
+              value: 'DTTHZ2N',
+            },
+            {
+              label: 'RGB',
+              value: 'RGB',
+            },
+          ]"
+          v-model="selectedDesignType"
+          style="width: 200px;" 
           
+  />
+         
         </div>
       </div>
-      <Fields class="border-t pt-4" :sections="sections" :data="deal" />
+      <Fields class="border-t pt-4" :sections="sections" :data="design" />
       <ErrorMessage class="mt-4" v-if="error" :message="__(error)" />
     </template>
     <template #actions>
@@ -55,7 +69,7 @@
         <Button
           variant="solid"
           :label="__('Create')"
-          :loading="isDealCreating"
+          :loading="isDesignCreating"
           @click="createDesign"
         />
       </div>
@@ -67,18 +81,18 @@
 import Fields from '@/components/Fields.vue'
 import { usersStore } from '@/stores/users'
 import { statusesStore } from '@/stores/statuses'
-import { Switch, createResource,Dropdown } from 'frappe-ui'
+import { Switch, createResource,Dropdown, Select } from 'frappe-ui'
 import { computed, ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const { getUser } = usersStore()
-const { getDealStatus, statusOptions } = statusesStore()
+const { getDesignStatus, statusOptions } = statusesStore()
 
 const show = defineModel()
 const router = useRouter()
 const error = ref(null)
 
-const deal = reactive({
+const design = reactive({
   power_kva: '',
   hv_kv: '',
   hv_um_kv: '',
@@ -106,7 +120,17 @@ const deal = reactive({
   special_parameters: ''
 })
 
-const isDealCreating = ref(false)
+// const designOptions = [
+//   { label: '', value: '' },
+//   { label: 'DTTHZ2N', value: 'DTTHZ2N' },
+//   { label: 'RGB', value: 'RGB' },
+// ];
+
+// const handleDesignTypeChange = (value) => {
+//   selectedDesignType.value = value;
+// };
+
+const isDesignCreating = ref(false)
 // const dtthz2n = ref(false)
 // const rgb = ref(false)
 const selectedDesignType = ref('')
@@ -346,10 +370,10 @@ const sections = computed(() => {
   return fields
 })
 
-const dealStatuses = computed(() => {
-  let statuses = statusOptions('deal')
-  if (!deal.status) {
-    deal.status = statuses[0].value
+const designStatuses = computed(() => {
+  let statuses = statusOptions('design')
+  if (!design.status) {
+    design.status = statuses[0].value
   }
   return statuses
 })
@@ -379,19 +403,26 @@ function createDesign() {
         error.value = __('Invalid Email')
         return error.value
       }
-      isDealCreating.value = true
+      isDesignCreating.value = true
     },
     onSuccess(name) {
-      isDealCreating.value = false
+      isDesignCreating.value = false
       show.value = false
-      router.push({ name: 'Deal', params: { dealId: name } })
+      router.push({ name: 'Design', params: { designId: name } })
     },
   })
 }
 
 onMounted(() => {
-  if (!deal.deal_owner) {
-    deal.deal_owner = getUser().email
+  if (!design.design_owner) {
+    design.design_owner = getUser().email
   }
 })
 </script>
+<style scoped>
+/* Remove outline for the specific formControl component */
+.form-control:focus,
+.form-control:focus-visible {
+  outline: none !important;
+}
+</style>
