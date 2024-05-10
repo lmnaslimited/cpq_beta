@@ -20,7 +20,7 @@ cd /workspace
 bench init \
 --ignore-exist \
 --skip-redis-config-generation \
-frappe-bench
+--frappe-branch version-15 frappe-bench
 
 cd frappe-bench
 
