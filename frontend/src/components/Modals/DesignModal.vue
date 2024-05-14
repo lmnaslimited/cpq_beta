@@ -40,20 +40,7 @@
         </div> -->
        
         <Select
-          :options="[
-            {
-              label: '',
-              value: '',
-            },
-            {
-              label: 'DTTHZ2N',
-              value: 'DTTHZ2N',
-            },
-            {
-              label: 'RGB',
-              value: 'RGB',
-            },
-          ]"
+          :options="transformerTypeOptions"
           v-model="selectedDesignType"
           style="width: 200px;" 
           
@@ -84,6 +71,7 @@ import { statusesStore } from '@/stores/statuses'
 import { Switch, createResource,Dropdown, Select } from 'frappe-ui'
 import { computed, ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { call } from 'frappe-ui'
 
 const { getUser } = usersStore()
 const { getDesignStatus, statusOptions } = statusesStore()
@@ -134,6 +122,7 @@ const isDesignCreating = ref(false)
 // const dtthz2n = ref(false)
 // const rgb = ref(false)
 const selectedDesignType = ref('')
+const transformerTypeOptions = ref([])
 
 const sections = computed(() => {
   let fields = []
@@ -378,6 +367,18 @@ const designStatuses = computed(() => {
   return statuses
 })
 
+async function fetchTransformerTypes() {
+  try {
+    const  message  = await call('crm.fcrm.doctype.design.api.get_item_variant');
+    transformerTypeOptions.value = message;
+    console.log('API Response:', message);
+  } catch (error) {
+    console.error('Error fetching transformer types:', error);
+  }
+}
+
+
+
 function createDesign() {
   createResource({
     url: 'crm.fcrm.doctype.crm_deal.crm_deal.create_deal',
@@ -417,6 +418,7 @@ onMounted(() => {
   if (!design.design_owner) {
     design.design_owner = getUser().email
   }
+  fetchTransformerTypes()
 })
 </script>
 <style scoped>
