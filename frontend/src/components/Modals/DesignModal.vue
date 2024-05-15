@@ -40,20 +40,7 @@
         </div> -->
        
         <Select
-          :options="[
-            {
-              label: '',
-              value: '',
-            },
-            {
-              label: 'DTTHZ2N',
-              value: 'DTTHZ2N',
-            },
-            {
-              label: 'RGB',
-              value: 'RGB',
-            },
-          ]"
+          :options="transformerTypeOptions"
           v-model="selectedDesignType"
           style="width: 200px;" 
           
@@ -82,8 +69,9 @@ import Fields from '@/components/Fields.vue'
 import { usersStore } from '@/stores/users'
 import { statusesStore } from '@/stores/statuses'
 import { Switch, createResource,Dropdown, Select } from 'frappe-ui'
-import { computed, ref, reactive, onMounted } from 'vue'
+import { computed, ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { call } from 'frappe-ui'
 
 const { getUser } = usersStore()
 const { getDesignStatus, statusOptions } = statusesStore()
@@ -134,239 +122,46 @@ const isDesignCreating = ref(false)
 // const dtthz2n = ref(false)
 // const rgb = ref(false)
 const selectedDesignType = ref('')
+const transformerTypeOptions = ref([])
 
 const sections = computed(() => {
   let fields = []
-  if (selectedDesignType.value === 'DTTHZ2N') {
-    fields.push({
-      section: 'DTTHZ2N',
-      fields: [
-      {
-          label: 'HV (KV)',
-          name: 'hv_kv',
-          type: 'range',
-          id: 'hv_kv_id',
-          max:"100",
-          step:"1",
-          min:"0",
-          placeholder: '',
-        },
-        {
-          label: 'LV (V)',
-          name: 'lv_v',
-          type: 'range',
-          id: 'lv_v_id',
-          max:"120",
-          step:"1",
-          min:"0",
-          placeholder: '',
-        },
-        {
-          label: 'Vectar Group',
-          name: 'vectar_group',
-          type: 'int',
-          placeholder: '',
-         
-        },
-        {
-          label: 'Power (KVA)',
-          name: 'power_kva',
-          type: 'int',
-          placeholder: '',
-        },
-       
-        {
-          label: 'HV Um (kv)',
-          name: 'hv_um_kv',
-          type: 'select',
-          options: [
-            { label: __('1-10'), value: '1-10' },
-            { label: __('11-50'), value: '11-50' },
-            { label: __('51-200'), value: '51-200' },
-            { label: __('201-500'), value: '201-500' },
-            { label: __('501-1000'), value: '501-1000' },
-            { label: __('1001-5000'), value: '1001-5000' },
-            { label: __('5001-10000'), value: '5001-10000' },
-            { label: __('10001+'), value: '10001+' },
-          ],
-          placeholder: '1-10',
-        },
-        {
-          label: 'HV AC (KV)',
-          name: 'hv_ac_kv',
-          type: 'select',
-          options: [
-            { label: __('1-10'), value: '1-10' },
-            { label: __('11-50'), value: '11-50' },
-            { label: __('51-200'), value: '51-200' },
-            { label: __('201-500'), value: '201-500' },
-            { label: __('501-1000'), value: '501-1000' },
-            { label: __('1001-5000'), value: '1001-5000' },
-            { label: __('5001-10000'), value: '5001-10000' },
-            { label: __('10001+'), value: '10001+' },
-          ],
-          placeholder: '1-10',
-        },
-        {
-          label: 'LV Um (KV)',
-          name: 'lv_um_kv',
-          type: 'select',
-          options: [
-            { label: __('1-10'), value: '1-10' },
-            { label: __('11-50'), value: '11-50' },
-            { label: __('51-200'), value: '51-200' },
-            { label: __('201-500'), value: '201-500' },
-            { label: __('501-1000'), value: '501-1000' },
-            { label: __('1001-5000'), value: '1001-5000' },
-            { label: __('5001-10000'), value: '5001-10000' },
-            { label: __('10001+'), value: '10001+' },
-          ],
-          placeholder: '1-10',
-        },
-        {
-          label: 'LV AC (KV)',
-          name: 'lv_ac_kv',
-          type: 'select',
-          options: [
-            { label: __('1-10'), value: '1-10' },
-            { label: __('11-50'), value: '11-50' },
-            { label: __('51-200'), value: '51-200' },
-            { label: __('201-500'), value: '201-500' },
-            { label: __('501-1000'), value: '501-1000' },
-            { label: __('1001-5000'), value: '1001-5000' },
-            { label: __('5001-10000'), value: '5001-10000' },
-            { label: __('10001+'), value: '10001+' },
-          ],
-          placeholder: '1-10',
-        },
-        {
-          label: 'LV LI (KV)',
-          name: 'lv_li_kv',
-          type: 'int',
-          placeholder: '',
-        },
-        {
-          label: 'Tappings Number Of Tappings',
-          name: 'tappings_number_of_tappings',
-          type: 'int',
-          placeholder: '',
-        },
-        {
-          label: 'Tappings value',
-          name: 'tappings_value',
-          type: 'int',
-          placeholder: '',
-        },
-      ],
-    })
-   } 
-  else if (selectedDesignType.value === 'RGB') {
-    fields.push({
-      section: 'RGB',
-      fields: [
-        {
-          label: 'PO (W)',
-          name: 'po_w',
-          type: 'link',
-          placeholder: '',
-          doctype: 'Contact',
-        },
-        {
-          label: 'PK (W)',
-          name: 'pk_w',
-          type: 'link',
-          doctype: 'Salutation',
-          placeholder: '',
-        },
-        {
-          label: 'UK',
-          name: 'uk',
-          type: 'data',
-          placeholder: '',
-        },
-        {
-          label: 'Temperature Rise (k)',
-          name: 'temperature_rise_k',
-          type: 'data',
-          placeholder: '',
-        },
-        {
-          label: 'Ambient Max Temperature',
-          name: 'ambient_max_temperature',
-          type: 'data',
-          placeholder: '',
-        },
-        {
-          label: 'Transfer IP',
-          name: 'transformer_ip',
-          type: 'int',
-          placeholder: '',
-        },
-        {
-          label: 'Climatic Class',
-          name: 'climatic_class',
-          type: 'link',
-          doctype: 'Gender',
-          placeholder: '',
-        },
-        {
-          label: 'Environment Class',
-          name: 'environment_class',
-          type: 'link',
-          doctype: 'Gender',
-          placeholder: '',
-        },
-        {
-          label: 'LWA (Db)',
-          name: 'lwa_db',
-          type: 'link',
-          doctype: 'Gender',
-          placeholder: '',
-        },
-        {
-          label: 'Lpa (Db)',
-          name: 'lpa_db',
-          type: 'link',
-          doctype: 'Gender',
-          placeholder: '',
-        },
-        {
-          label: 'THDI',
-          name: 'thdi',
-          type: 'link',
-          doctype: 'Gender',
-          placeholder: '',
-        },
-        {
-          label: 'Parallel Coil',
-          name: 'parallel_coil',
-          type: 'link',
-          doctype: 'Gender',
-          placeholder: '',
-        },
-      ],
-    })
-  } 
+  if (selectedDesignType.value) {
+    fetchTransformerDetails(selectedDesignType.value)
+      .then((fetchedFields) => {
+       console.log("push:",fetchedFields)
+        if (fetchedFields) {
+          fields.push({
+            section: '',
+            fields: fetchedFields
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching transformer details:', error);
+      });
+  }
+  // Push common fields outside the conditional block if needed
   fields.push({
     section: '',
     columns: 2,
     fields: [
-    {
-          label: 'Electrostatic Screen',
-          name: 'electrostatic_screen',
-          type: 'link',
-          doctype: 'Gender',
-          placeholder: '',
-        },
-        {
-          label: 'Special Parameters',
-          name: 'special_parameters',
-          type: 'link',
-          doctype: 'Gender',
-          placeholder: '',
-        },
+      {
+        label: 'Electrostatic Screen',
+        name: 'electrostatic_screen',
+        type: 'link',
+        doctype: 'Gender',
+        placeholder: '',
+      },
+      {
+        label: 'Special Parameters',
+        name: 'special_parameters',
+        type: 'link',
+        doctype: 'Gender',
+        placeholder: '',
+      },
     ],
-  })
+  });
   return fields
 })
 
@@ -377,6 +172,72 @@ const designStatuses = computed(() => {
   }
   return statuses
 })
+
+async function fetchTransformerTypes() {
+  try {
+    const  message  = await call('crm.fcrm.doctype.design.api.get_item_variant');
+    transformerTypeOptions.value = message;
+   
+  } catch (error) {
+    console.error('Error fetching transformer types:', error);
+  }
+}
+
+
+
+async function fetchTransformerDetails(transformerType) {
+  try {
+    const itemDetail = await call('frappe.client.get', {
+      doctype: 'Item',
+      name: transformerType
+    });
+
+    if (itemDetail.attributes) {
+      const itemAttribute = itemDetail.attributes;
+      const fields = []; // Declare fields variable here
+      const attributeDetail = itemAttribute.map(async (attribute) => {
+        const itemVariant = await call('frappe.client.get', {
+          doctype: 'Item Attribute',
+          name: attribute.attribute
+        });
+       
+        let field;
+        if (itemVariant.numeric_values != 1) {
+          // If numeric_value is 0, it should be a select type
+          field = {
+            label: itemVariant.attribute_name,
+            name: itemVariant.attribute_name.replace(/\s+/g, '_').replace(/[()]/g, '').toLowerCase(),
+            type: 'select',
+            options: itemVariant.item_attribute_values.map(val => ({
+              label: val.abbr,
+              value: val.attribute_value
+            }))
+          };
+        } else {
+          // Otherwise, it's an integer type
+          field = {
+            label: itemVariant.attribute_name,
+            name: itemVariant.attribute_name.replace(/\s+/g, '_').replace(/[()]/g, '').toLowerCase(),
+            type: 'int',
+            placeholder: ''
+          };
+        }
+        return field;
+      });
+
+      const fetchedFields = await Promise.all(attributeDetail);
+      console.log('Fields:', fetchedFields);
+      return fetchedFields;
+    }
+  } catch (error) {
+    console.error('Error fetching transformer details:', error);
+  }
+}
+
+
+
+
+
 
 function createDesign() {
   createResource({
@@ -417,7 +278,16 @@ onMounted(() => {
   if (!design.design_owner) {
     design.design_owner = getUser().email
   }
+  fetchTransformerTypes()
 })
+
+watch(() => selectedDesignType.value, (newValue, oldValue) => {
+  if(newValue !== oldValue) {
+    fetchTransformerDetails(newValue);
+  }
+});
+
+
 </script>
 <style scoped>
 /* Remove outline for the specific formControl component */
