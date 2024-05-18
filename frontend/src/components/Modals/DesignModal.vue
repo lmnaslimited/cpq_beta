@@ -66,6 +66,19 @@ const sections = computed(() => {
     fields: fetchedFields.value
   }] : []
 
+   fields.push({
+    section: '',
+    columns: 2,
+    fields: [
+      {
+        label: 'Rating',
+        name: 'rating',
+        type: 'data',
+        placeholder: '',
+      },
+      
+    ],
+  });
   return fields
 })
 
@@ -137,39 +150,27 @@ async function fetchTransformerDetails(transformerType) {
   }
 }
 
-function createDesign() {
-  createResource({
-    url: 'crm.fcrm.doctype.crm_deal.crm_deal.create_deal',
-    params: { args: deal },
-    auto: true,
-    validate() {
-      error.value = null
-      if (deal.website && !deal.website.startsWith('http')) {
-        deal.website = 'https://' + deal.website
-      }
-      if (deal.annual_revenue) {
-        deal.annual_revenue = deal.annual_revenue.replace(/,/g, '')
-        if (isNaN(deal.annual_revenue)) {
-          error.value = __('Annual Revenue should be a number')
-          return error.value
-        }
-      }
-      if (deal.mobile_no && isNaN(deal.mobile_no.replace(/[-+() ]/g, ''))) {
-        error.value = __('Mobile No should be a number')
-        return error.value
-      }
-      if (deal.email && !deal.email.includes('@')) {
-        error.value = __('Invalid Email')
-        return error.value
-      }
-      isDesignCreating.value = true
-    },
-    onSuccess(name) {
-      isDesignCreating.value = false
-      show.value = false
-      router.push({ name: 'Design', params: { designId: name } })
-    },
-  })
+async function createDesign() {
+  isDesignCreating.value = true;
+  error.value = null;
+
+  try {
+    const response = await call('crm.fcrm.doctype.design.api.save_design', {
+      data: design
+    });
+
+    if (response.status === 'success') {
+      isDesignCreating.value = false;
+      show.value = false;
+      router.push({ name: 'Design', params: { designId: response.docname } });
+    } else {
+      error.value = response.message;
+    }
+  } catch (err) {
+    error.value = err.message;
+  } finally {
+    isDesignCreating.value = false;
+  }
 }
 
 onMounted(() => {
