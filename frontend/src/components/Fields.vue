@@ -74,7 +74,7 @@
                 value="0"
                 @input="handleChangeRange(field.id,$event.target.value)"
               />
-              <p :id=field.id class="text-gray-600" contenteditable="true" @input="updateRangeValue(field.name, $event.target.innerText)">0</p>
+              <p :id=field.id class="text-gray-600" contenteditable="true" @input="updateRangeValue(field.name, $event.target.innerText)">{{field.min}}</p>
           
           </div>
           <div v-else-if="field.type === 'dropdown'">
