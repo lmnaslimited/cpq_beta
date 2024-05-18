@@ -21,3 +21,9 @@ def get_design(name):
   design["_form_script"] = get_form_script('Design')
   design["_assign"] = get_assigned_users("Design", design.name)
   return design
+
+@frappe.whitelist()
+def get_item_variant():
+  item_variant = frappe.get_list("Item", filters={"has_variants": 1})
+  item_names = [item['name'] for item in item_variant]
+  return item_names
