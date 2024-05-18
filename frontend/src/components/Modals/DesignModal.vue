@@ -7,17 +7,17 @@
     }"
   >
     <template #body-content>
-      <div class="mb-4 grid grid-cols-1 ">
+      <div class="mb-4 grid grid-cols-1">
         <div class="flex items-center gap-3 text-sm text-gray-600">
           <div>{{ __('Select Design Type') }}</div>
           <Select
             :options="transformerTypeOptions"
             v-model="design.design_type"
-            style="width: 200px;" 
+            style="width: 200px;"
           />
         </div>
       </div>
-      <Fields class="border-t pt-4" :sections="sections" :data="design"  @updateField="handleFieldUpdate" />
+      <Fields class="border-t pt-4" :sections="sections" :data="design" @updateField="handleFieldUpdate" />
       <ErrorMessage class="mt-4" v-if="error" :message="__(error)" />
     </template>
     <template #actions>
@@ -37,7 +37,7 @@
 import Fields from '@/components/Fields.vue'
 import { usersStore } from '@/stores/users'
 import { statusesStore } from '@/stores/statuses'
-import { Switch, createResource, Select } from 'frappe-ui'
+import { Select } from 'frappe-ui'
 import { computed, ref, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { call } from 'frappe-ui'
@@ -53,7 +53,7 @@ const design = reactive({
   hv_kv: '',
   lv_v: '',
   vectar_group: '',
-  design_type: '',  // Renamed to avoid conflict
+  design_type: '',
 })
 
 const isDesignCreating = ref(false)
@@ -66,7 +66,7 @@ const sections = computed(() => {
     fields: fetchedFields.value
   }] : []
 
-   fields.push({
+  fields.push({
     section: '',
     columns: 2,
     fields: [
@@ -76,9 +76,8 @@ const sections = computed(() => {
         type: 'data',
         placeholder: '',
       },
-      
     ],
-  });
+  })
   return fields
 })
 
@@ -92,10 +91,10 @@ const designStatuses = computed(() => {
 
 async function fetchTransformerTypes() {
   try {
-    const message = await call('crm.fcrm.doctype.design.api.get_item_variant');
-    transformerTypeOptions.value = message;
+    const message = await call('crm.fcrm.doctype.design.api.get_item_variant')
+    transformerTypeOptions.value = message
   } catch (error) {
-    console.error('Error fetching transformer types:', error);
+    console.error('Error fetching transformer types:', error)
   }
 }
 
@@ -104,17 +103,17 @@ async function fetchTransformerDetails(transformerType) {
     const itemDetail = await call('frappe.client.get', {
       doctype: 'Item',
       name: transformerType
-    });
+    })
 
     if (itemDetail.attributes) {
-      const itemAttribute = itemDetail.attributes;
+      const itemAttribute = itemDetail.attributes
       const fields = await Promise.all(itemAttribute.map(async (attribute) => {
         const itemVariant = await call('frappe.client.get', {
           doctype: 'Item Attribute',
           name: attribute.attribute
-        });
-       
-        let field;
+        })
+
+        let field
         if (itemVariant.numeric_values != 1) {
           // If numeric_value is 0, it should be a select type
           field = {
@@ -125,9 +124,9 @@ async function fetchTransformerDetails(transformerType) {
               label: val.abbr,
               value: val.attribute_value
             }))
-          };
+          }
         } else {
-          // Otherwise, it's an integer type
+          // Otherwise, it's an range type
           field = {
             label: itemVariant.attribute_name,
             name: itemVariant.attribute_name.replace(/\s+/g, '_').replace(/[()]/g, '').toLowerCase(),
@@ -137,43 +136,53 @@ async function fetchTransformerDetails(transformerType) {
             step: itemVariant.increment,
             id: `${itemVariant.attribute_name.replace(/\s+/g, '_').replace(/[()]/g, '').toLowerCase()}_id`,
             placeholder: ''
-          };
+          }
         }
-        return field;
-      }));
-
-      console.log('Fields:', fields);
-      fetchedFields.value = fields;
+        return field
+      }))
+      fetchedFields.value = fields
     }
   } catch (error) {
-    console.error('Error fetching transformer details:', error);
+    console.error('Error fetching transformer details:', error)
   }
 }
 
 async function createDesign() {
-  isDesignCreating.value = true;
-  error.value = null;
+  isDesignCreating.value = true
+  error.value = null
 
   try {
+    // Prepare the data payload
+    const payload = {}
+    for (const [key, value] of Object.entries(design)) {
+      const fieldInfo = fetchedFields.value.find(field => field.name === key)
+      payload[key] = {
+        value: value,
+        type: fieldInfo?.type || 'data',
+        options: fieldInfo?.options?.map(option => option.value) || []
+      }
+    }
+
     const response = await call('crm.fcrm.doctype.design.api.save_design', {
-      data: design
-    });
+      data: payload
+    })
 
     if (response.status === 'success') {
-      isDesignCreating.value = false;
-      show.value = false;
-      router.push({ name: 'Design', params: { designId: response.docname } });
+      isDesignCreating.value = false
+      show.value = false
+      router.push({ name: 'Design', params: { designId: response.docname } })
     } else {
-      error.value = response.message;
+      error.value = response.message
     }
   } catch (err) {
-    error.value = err.message;
+    error.value = err.message
   } finally {
-    isDesignCreating.value = false;
+    isDesignCreating.value = false
   }
 }
+
 function handleFieldUpdate({ name, value }) {
-  design[name] = value;
+  design[name] = value
 }
 
 onMounted(() => {
@@ -184,10 +193,10 @@ onMounted(() => {
 })
 
 watch(() => design.design_type, (newValue, oldValue) => {
-  if(newValue !== oldValue) {
-    fetchTransformerDetails(newValue);
+  if (newValue !== oldValue) {
+    fetchTransformerDetails(newValue)
   }
-});
+})
 </script>
 
 <style scoped>

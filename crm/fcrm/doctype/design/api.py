@@ -38,22 +38,39 @@ def save_design(data):
 
         # Check for each field in data if it exists in the doctype
         meta = frappe.get_meta(doctype)
-        for fieldname, value in data.items():
+        for fieldname, field_info in data.items():
+            value = field_info['value']
+            fieldtype = field_info['type']
+            options = field_info.get('options', [])
+
             if not meta.has_field(fieldname):
-                # Add the field to the doctype
-                frappe.get_doc({
+                # Add the field to the doctype with appropriate fieldtype
+                fieldtype_map = {
+                    "select": "Select",
+                    "range": "Float",
+                    "data": "Data"
+                }
+
+                field_doc = frappe.get_doc({
                     "doctype": "Custom Field",
                     "dt": doctype,
                     "fieldname": fieldname,
                     "label": fieldname.replace("_", " ").title(),
-                    "fieldtype": "Data",  # You can customize the fieldtype based on your needs
-                }).insert(ignore_permissions=True)
+                    "fieldtype": fieldtype_map.get(fieldtype, "Data"),  # Default to "Data" if type is not recognized
+                })
+                
+                # If the field is of type select, set the options
+                if fieldtype == "select" and options:
+                    field_doc.options = "\n".join(options)
+                
+                field_doc.insert(ignore_permissions=True)
                 frappe.clear_cache(doctype=doctype)  # Clear cache to reflect new fields
 
         # Create a new document for your target DocType
+        doc_data = {fieldname: field_info['value'] for fieldname, field_info in data.items()}
         doc = frappe.get_doc({
             "doctype": doctype,
-            **data  # Spread the dynamic fields into the new document
+            **doc_data  # Spread the dynamic fields into the new document
         })
 
         # Save the document to the database
