@@ -62,20 +62,21 @@
               </Tooltip>
             </template>
           </Link>
-          <div v-else-if="field.type === 'range'">
+        <div v-else-if="field.type === 'range'">
             <input
-                type="range"
-                :class="field.name"
-                :min="field.min"
-                :max="field.max"
-                :step="field.step"
-                style="width:250px;  accent-color: black;"
-                variant="ghost"
-                value="0"
-                @input="handleChangeRange(field.id,$event.target.value)"
-              />
-              <p :id=field.id class="text-gray-600" contenteditable="true" @input="updateRangeValue(field.name, $event.target.innerText)">{{field.min}}</p>
-          
+              type="range"
+              :class="field.name"
+              :min="field.min"
+              :max="field.max"
+              :step="field.step"
+              :value="data[field.name]"
+              @input="handleChangeRange(field.name, $event.target.value)"
+              style="width:250px; accent-color: black;"
+              variant="ghost"
+            />
+            <p :id="field.name" class="text-gray-600" contenteditable="true" @input="updateRangeValue(field.name, $event.target.innerText)">
+              {{ data[field.name] }}
+            </p>
           </div>
           <div v-else-if="field.type === 'dropdown'">
             <NestedPopover>
@@ -154,20 +155,22 @@ const props = defineProps({
   data: Object,
 })
 
-const handleChangeRange = (id,value) => {
-   // Update the value displayed in the div with ID 'size'
-  const sizeElement = document.getElementById(id);
+const handleChangeRange = (name, value) => {
+  props.data[name] = value;
+  const sizeElement = document.getElementById(name);
   if (sizeElement) {
     sizeElement.innerHTML = value;
   }
 };
-const updateRangeValue=(id, value) => {
-  const rangeElement = document.getElementsByClassName(id)
+
+const updateRangeValue = (name, value) => {
+  props.data[name] = value;
+  const rangeElement = document.getElementsByClassName(name);
   if (rangeElement.length > 0) {
-    // Assuming there's only one range input with this class
     rangeElement[0].value = value;
   }
-}
+};
+
 
 </script>
 

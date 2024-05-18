@@ -32,10 +32,27 @@ def get_item_variant():
 def save_design(data):
     try:
         data = frappe.parse_json(data)
+        
+        # Define the doctype where the dynamic fields will be added
+        doctype = "Design"  # Replace with your actual DocType
+
+        # Check for each field in data if it exists in the doctype
+        meta = frappe.get_meta(doctype)
+        for fieldname, value in data.items():
+            if not meta.has_field(fieldname):
+                # Add the field to the doctype
+                frappe.get_doc({
+                    "doctype": "Custom Field",
+                    "dt": doctype,
+                    "fieldname": fieldname,
+                    "label": fieldname.replace("_", " ").title(),
+                    "fieldtype": "Data",  # You can customize the fieldtype based on your needs
+                }).insert(ignore_permissions=True)
+                frappe.clear_cache(doctype=doctype)  # Clear cache to reflect new fields
 
         # Create a new document for your target DocType
         doc = frappe.get_doc({
-            "doctype": "Design",  # Replace with your actual DocType
+            "doctype": doctype,
             **data  # Spread the dynamic fields into the new document
         })
 

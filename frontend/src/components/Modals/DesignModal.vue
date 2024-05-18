@@ -12,12 +12,12 @@
           <div>{{ __('Select Design Type') }}</div>
           <Select
             :options="transformerTypeOptions"
-            v-model="selectedDesignType"
+            v-model="design.design_type"
             style="width: 200px;" 
           />
         </div>
       </div>
-      <Fields class="border-t pt-4" :sections="sections" :data="design" />
+      <Fields class="border-t pt-4" :sections="sections" :data="design"  @updateField="handleFieldUpdate" />
       <ErrorMessage class="mt-4" v-if="error" :message="__(error)" />
     </template>
     <template #actions>
@@ -53,10 +53,10 @@ const design = reactive({
   hv_kv: '',
   lv_v: '',
   vectar_group: '',
+  design_type: '',  // Renamed to avoid conflict
 })
 
 const isDesignCreating = ref(false)
-const selectedDesignType = ref('')
 const transformerTypeOptions = ref([])
 const fetchedFields = ref([])
 
@@ -134,7 +134,7 @@ async function fetchTransformerDetails(transformerType) {
             type: 'range',
             min: itemVariant.from_range,
             max: itemVariant.to_range,
-            step:itemVariant.increment,
+            step: itemVariant.increment,
             id: `${itemVariant.attribute_name.replace(/\s+/g, '_').replace(/[()]/g, '').toLowerCase()}_id`,
             placeholder: ''
           };
@@ -172,6 +172,9 @@ async function createDesign() {
     isDesignCreating.value = false;
   }
 }
+function handleFieldUpdate({ name, value }) {
+  design[name] = value;
+}
 
 onMounted(() => {
   if (!design.design_owner) {
@@ -180,7 +183,7 @@ onMounted(() => {
   fetchTransformerTypes()
 })
 
-watch(() => selectedDesignType.value, (newValue, oldValue) => {
+watch(() => design.design_type, (newValue, oldValue) => {
   if(newValue !== oldValue) {
     fetchTransformerDetails(newValue);
   }
