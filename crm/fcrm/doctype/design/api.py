@@ -28,50 +28,45 @@ def get_item_variant():
   item_names = [item['name'] for item in item_variant]
   return item_names
 
+
 @frappe.whitelist(allow_guest=True)
 def save_design(data):
     try:
         data = frappe.parse_json(data)
         
         # Define the doctype where the dynamic fields will be added
-        doctype = "Design"  # Replace with your actual DocType
+        doctype = "Design"
 
-        # Check for each field in data if it exists in the doctype
+        # Initialize dictionaries for main doc and child table data
+        main_doc_data = {}
+        child_table_data = []
+
+        # Get the meta for the doctype
         meta = frappe.get_meta(doctype)
+
         for fieldname, field_info in data.items():
             value = field_info['value']
-            fieldtype = field_info['type']
-            options = field_info.get('options', [])
 
-            if not meta.has_field(fieldname):
-                # Add the field to the doctype with appropriate fieldtype
-                fieldtype_map = {
-                    "select": "Select",
-                    "range": "Float",
-                    "data": "Data"
-                }
-
-                field_doc = frappe.get_doc({
-                    "doctype": "Custom Field",
-                    "dt": doctype,
-                    "fieldname": fieldname,
-                    "label": fieldname.replace("_", " ").title(),
-                    "fieldtype": fieldtype_map.get(fieldtype, "Data"),  # Default to "Data" if type is not recognized
+            # Check if the field is in the main doctype fields
+            if meta.has_field(field_info['name']):
+                main_doc_data[field_info['name']] = value
+            else:
+                # If the field is not in the main doctype, add it to the child table data
+                # Use the field label as the key instead of the fieldname
+                child_table_data.append({
+                    'attribute': field_info['label'],  # Use label as the key
+                    'attribute_value': value
                 })
-                
-                # If the field is of type select, set the options
-                if fieldtype == "select" and options:
-                    field_doc.options = "\n".join(options)
-                
-                field_doc.insert(ignore_permissions=True)
-                frappe.clear_cache(doctype=doctype)  # Clear cache to reflect new fields
 
         # Create a new document for your target DocType
-        doc_data = {fieldname: field_info['value'] for fieldname, field_info in data.items()}
         doc = frappe.get_doc({
             "doctype": doctype,
-            **doc_data  # Spread the dynamic fields into the new document
+            **main_doc_data
         })
+
+        # Add attributes to the child table
+        for child in child_table_data:
+            doc.append('custom_item_variant_attribute', child)
 
         # Save the document to the database
         doc.insert()

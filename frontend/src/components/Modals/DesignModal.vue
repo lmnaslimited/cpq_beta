@@ -50,10 +50,9 @@ const router = useRouter()
 const error = ref(null)
 
 const design = reactive({
-  hv_kv: '',
-  lv_v: '',
-  vectar_group: '',
-  design_type: '',
+  design_owner: '',
+   design_type: '',
+   rating: '',
 })
 
 const isDesignCreating = ref(false)
@@ -121,7 +120,7 @@ async function fetchTransformerDetails(transformerType) {
             name: itemVariant.attribute_name.replace(/\s+/g, '_').replace(/[()]/g, '').toLowerCase(),
             type: 'select',
             options: itemVariant.item_attribute_values.map(val => ({
-              label: val.abbr,
+              label: val.attribute_value,
               value: val.attribute_value
             }))
           }
@@ -154,14 +153,46 @@ async function createDesign() {
   try {
     // Prepare the data payload
     const payload = {}
+
+    // Include fields from fetchedFields
     for (const [key, value] of Object.entries(design)) {
-      const fieldInfo = fetchedFields.value.find(field => field.name === key)
-      payload[key] = {
-        value: value,
-        type: fieldInfo?.type || 'data',
-        options: fieldInfo?.options?.map(option => option.value) || []
+      const field = fetchedFields.value.find(field => field.name === key)
+
+      if (field) {
+        payload[field.label] = {
+          label: field.label,
+          name: field.name,
+          value: value,
+          type: 'data'
+        }
       }
     }
+
+    // Include other fields like design_owner and design_type
+    payload['Design Owner'] = {
+      label: 'Design Owner',
+      name: 'design_owner',
+      value: design.design_owner,
+      type: 'data'
+    };
+
+    payload['Design Type'] = {
+      label: 'Design Type',
+      name: 'design_type',
+      value: design.design_type,
+      type: 'data'
+    };
+
+    // Include the "Rating" field
+    const ratingField = {
+      label: 'Rating',
+      name: 'rating',
+      value: design.rating,
+      type: 'data'
+    };
+
+    // Add the "Rating" field to the payload
+    payload['Rating'] = ratingField;
 
     const response = await call('crm.fcrm.doctype.design.api.save_design', {
       data: payload
@@ -180,6 +211,9 @@ async function createDesign() {
     isDesignCreating.value = false
   }
 }
+
+
+
 
 function handleFieldUpdate({ name, value }) {
   design[name] = value
