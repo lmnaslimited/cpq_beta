@@ -109,6 +109,16 @@
                   {{ design.data.name }}
                 </div>
               </Tooltip>
+               <Tooltip :text="design.data.design_type">
+          <div class="truncate text-lg text-gray-500">
+            {{ design.data.design_type }}
+          </div>
+        </Tooltip>
+          <div v-if="design.data.custom_item_variant_attribute">
+          <div v-for="(entry, index) in design.data.custom_item_variant_attribute" :key="index">
+            <div>{{ entry.attribute }}: {{ entry.attribute_value }}</div>
+          </div>
+        </div>
               <div class="flex gap-1.5">
 
               </div>
