@@ -207,7 +207,7 @@ import { useRouter } from 'vue-router'
 const { $dialog, makeCall } = globalStore()
 const { getContactByName, contacts } = contactsStore()
 const { organizations } = organizationsStore()
-const { statusOptions, getLeadStatus } = statusesStore()
+const { statusOptions, getDesignStatus } = statusesStore()
 const router = useRouter()
 
 const props = defineProps({
