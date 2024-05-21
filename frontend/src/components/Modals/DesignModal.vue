@@ -165,19 +165,19 @@ const validateRangeIncrement = (name, value, min, max, step) => {
   error.value = null;
 
   try {
-    // Validate range fields
-    const rangeFields = fetchedFields.value.filter(field => field.type === 'range');
+   const rangeFields = fetchedFields.value.filter(field => field.type === 'range');
     const rangeValidationResults = rangeFields.map(field => ({
       name: field.name,
       error: validateRangeIncrement(field.name, design[field.name], field.min, field.max, field.step)
     }));
 
     // Check if any errors exist
-    const hasRangeErrors = rangeValidationResults.some(result => result.error !== null);
+    const rangeErrors = rangeValidationResults.filter(result => result.error !== null);
 
-    if (hasRangeErrors) {
+    if (rangeErrors.length > 0) {
       // Handle range validation errors, e.g., display error message
-      error.value = 'Please fix the errors in the range fields before proceeding.';
+      const errorFields = rangeErrors.map(result => result.name).join(', ');
+      error.value = ``;
       return;
     }
 
