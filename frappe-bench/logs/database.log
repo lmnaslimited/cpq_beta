@@ -1,0 +1,119 @@
+2024-05-15 19:12:38,115 WARNING database DDL Query made to DB:
+create table `tabCRM Industry` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus int(1) not null default '0',
+			idx int(8) not null default '0',
+			`industry` varchar(140) unique,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index modified(modified))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2024-05-15 19:12:38,341 WARNING database DDL Query made to DB:
+create table `tabCRM Organization` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus int(1) not null default '0',
+			idx int(8) not null default '0',
+			`organization_name` varchar(140) unique,
+`no_of_employees` varchar(140),
+`annual_revenue` decimal(21,9) not null default 0,
+`organization_logo` text,
+`website` varchar(140),
+`territory` varchar(140),
+`industry` varchar(140),
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index modified(modified))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2024-05-15 19:12:38,528 WARNING database DDL Query made to DB:
+create table `tabCRM Communication Status` (
+			name varchar(140) primary key,
+			creation datetime(6),
+			modified datetime(6),
+			modified_by varchar(140),
+			owner varchar(140),
+			docstatus int(1) not null default '0',
+			idx int(8) not null default '0',
+			`status` varchar(140) unique,
+`_user_tags` text,
+`_comments` text,
+`_assign` text,
+`_liked_by` text,
+index modified(modified))
+			ENGINE=InnoDB
+			ROW_FORMAT=DYNAMIC
+			CHARACTER SET=utf8mb4
+			COLLATE=utf8mb4_unicode_ci
+2024-05-15 19:12:40,375 WARNING database DDL Query made to DB:
+ALTER TABLE `tabEmail Template` ADD COLUMN `enabled` int(1) not null default 0, ADD COLUMN `reference_doctype` varchar(140)
+2024-05-18 11:21:22,591 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `custom_hv_` int(11) not null default 0
+2024-05-18 15:37:32,655 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `hv_kv` varchar(140)
+2024-05-18 15:37:32,817 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `lv_v` varchar(140)
+2024-05-18 15:37:32,969 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `vectar_group` varchar(140)
+2024-05-18 15:37:33,119 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `design_owner` varchar(140)
+2024-05-18 15:52:46,364 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `custom_transformer_type` varchar(140)
+2024-05-18 16:14:24,358 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `selecteddesigntype` varchar(140)
+2024-05-18 16:21:55,873 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `design_type` varchar(140)
+2024-05-18 17:40:59,587 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `hv_kv` int(11) not null default 0
+2024-05-18 17:40:59,822 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `lv_v` int(11) not null default 0
+2024-05-18 18:24:15,594 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `hv_kv` decimal(21,9) not null default 0
+2024-05-18 18:24:15,832 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `hv_kv` decimal(21,9) not null default 0, MODIFY `lv_v` decimal(21,9) not null default 0
+2024-05-18 18:38:01,497 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `lv_v` decimal(21,9) not null default 0, MODIFY `hv_kv` decimal(21,9) not null default 0
+2024-05-20 04:53:12,736 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `length` decimal(21,9) not null default 0
+2024-05-20 04:53:12,805 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `hv_kv` decimal(21,9) not null default 0, MODIFY `lv_v` decimal(21,9) not null default 0
+2024-05-20 04:53:12,959 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `width` decimal(21,9) not null default 0
+2024-05-20 04:53:13,021 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `lv_v` decimal(21,9) not null default 0, MODIFY `hv_kv` decimal(21,9) not null default 0, MODIFY `length` decimal(21,9) not null default 0
+2024-05-20 04:53:13,181 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `house_type` varchar(140)
+2024-05-20 04:53:13,243 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `length` decimal(21,9) not null default 0, MODIFY `lv_v` decimal(21,9) not null default 0, MODIFY `hv_kv` decimal(21,9) not null default 0, MODIFY `width` decimal(21,9) not null default 0
+2024-05-20 04:53:13,398 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `floors` decimal(21,9) not null default 0
+2024-05-20 04:53:13,457 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `hv_kv` decimal(21,9) not null default 0, MODIFY `width` decimal(21,9) not null default 0, MODIFY `lv_v` decimal(21,9) not null default 0, MODIFY `length` decimal(21,9) not null default 0
+2024-05-20 04:53:13,657 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `roofing_type` varchar(140)
+2024-05-20 04:53:13,717 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `hv_kv` decimal(21,9) not null default 0, MODIFY `length` decimal(21,9) not null default 0, MODIFY `floors` decimal(21,9) not null default 0, MODIFY `lv_v` decimal(21,9) not null default 0, MODIFY `width` decimal(21,9) not null default 0
+2024-05-20 07:26:05,237 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `length` decimal(21,9) not null default 0, MODIFY `hv_kv` decimal(21,9) not null default 0, MODIFY `width` decimal(21,9) not null default 0, MODIFY `floors` decimal(21,9) not null default 0, MODIFY `lv_v` decimal(21,9) not null default 0
+2024-05-20 07:26:05,372 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `length` decimal(21,9) not null default 0, MODIFY `floors` decimal(21,9) not null default 0, MODIFY `width` decimal(21,9) not null default 0, MODIFY `lv_v` decimal(21,9) not null default 0, MODIFY `hv_kv` decimal(21,9) not null default 0
+2024-05-21 04:39:50,295 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` ADD COLUMN `naming_series` varchar(140)
+2024-05-21 04:40:20,772 WARNING database DDL Query made to DB:
+ALTER TABLE `tabDesign` MODIFY `naming_series` varchar(140) default 'design_type.YYYY.####'
