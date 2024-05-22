@@ -78,9 +78,10 @@
             />
             <p
               :id="field.name"
-              class="text-gray-600"
+              class="text-gray-600 rounded p-2"
               contenteditable="true"
               @input="updateRangeValue(field.name, $event.target.innerText, field.min,field.max, field.step)"
+              style="background-color: #f5f5f5;"
             >
               {{ data[field.name] }}
             </p>
@@ -155,7 +156,7 @@ import UserAvatar from '@/components/UserAvatar.vue'
 import Link from '@/components/Controls/Link.vue'
 import { usersStore } from '@/stores/users'
 import { Tooltip } from 'frappe-ui'
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch, onMounted } from 'vue'
 
 const { getUser } = usersStore()
 
@@ -188,6 +189,10 @@ const validateRangeIncrement = (name, value, min, max, step) => {
   // Extract the number of decimal places in the value
   const valueDecimalPlaces = (value.includes('.') ? value.split('.')[1].length : 0) || 0;
 
+   if (Number.isInteger(numericStep) && value.includes('.')) {
+        return `Not a decimal value.`;
+    }
+
   // Check if the value has the correct number of decimal places as the step
   if (valueDecimalPlaces !== stepDecimalPlaces) {
     return `Value should increment by ${step}`;
@@ -219,6 +224,30 @@ const updateRangeValue = (name, value, min, max, step) => {
     rangeElement[0].value = value;
   }
 };
+
+const setInitialValues = () => {
+  for (const section of props.sections) {
+    for (const field of section.fields) {
+      if (field.type === 'range') {
+        const name = field.name;
+        const min = field.min;
+        if (props.data[name] === undefined || props.data[name] === null || props.data[name] === '') {
+          props.data[name] = min; // Set initial value to min if undefined, null, or empty string
+          updateRangeValue(name, min, min, field.max, field.step);
+          updateRangeDisplay(name, min);
+        }
+      }
+    }
+  }
+};
+
+onMounted(() => {
+  watch(() => props.sections, (newValue, oldValue) => {
+    if (newValue !== oldValue && newValue.length > 0) {
+      setInitialValues();
+    }
+  })
+})
 
 </script>
 

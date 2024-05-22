@@ -150,12 +150,24 @@ const validateRangeIncrement = (name, value, min, max, step) => {
       return `Value should be between ${min} and ${max}`;
     }
 
-   const stepDecimalPlaces = step.toString().split('.')[1]?.length || 0;
+    if (numericValue === numericMin || numericValue === numericMax) {
+    return null; // No need for further validation
+  }
+
+    // Extract the number of decimal places in the step
+  const stepDecimalPlaces = step.toString().split('.')[1]?.length || 0;
+
+  // Extract the number of decimal places in the value
   const valueDecimalPlaces = (value.includes('.') ? value.split('.')[1].length : 0) || 0;
 
-    if (valueDecimalPlaces !== stepDecimalPlaces) {
-      return `Value should increment by ${step}`;
+   if (Number.isInteger(numericStep) && value.includes('.')) {
+        return `Not a decimal value.`;
     }
+    
+  // Check if the value has the correct number of decimal places as the step
+  if (valueDecimalPlaces !== stepDecimalPlaces) {
+    return `Value should increment by ${step}`;
+  }
 
     return null; // Return null if no validation errors
   };
