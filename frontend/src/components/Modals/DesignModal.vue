@@ -137,40 +137,49 @@ async function fetchTransformerDetails(transformerType) {
 
 
 const validateRangeIncrement = (name, value, min, max, step) => {
-    const numericValue = parseFloat(value);
-    const numericMin = parseFloat(min);
-    const numericMax = parseFloat(max);
-    const numericStep = parseFloat(step);
-     
-    if (!/^\d*\.?\d*$/.test(value)) {
+
+  const numericValue = parseFloat(value);
+  const numericMin = parseFloat(min);
+  const numericMax = parseFloat(max);
+  const numericStep = parseFloat(step);
+
+ if (!/^\d*\.?\d*$/.test(value)) {
     return 'Invalid Input.';
   }
-    // Check if the value is within the range
-    if (numericValue < numericMin || numericValue > numericMax) {
-      return `Value should be between ${min} and ${max}`;
-    }
 
-    if (numericValue === numericMin || numericValue === numericMax) {
-    return null; // No need for further validation
+
+  // Check if the value is outside the range
+  if (numericValue < numericMin || numericValue > numericMax) {
+    return `Value should be between ${min} and ${max}`;
   }
 
-    // Extract the number of decimal places in the step
+  // Extract the number of decimal places in the step
   const stepDecimalPlaces = step.toString().split('.')[1]?.length || 0;
 
   // Extract the number of decimal places in the value
-  const valueDecimalPlaces = (value.includes('.') ? value.split('.')[1].length : 0) || 0;
+  const valueDecimalPlaces = (value.toString().includes('.') ? value.split('.')[1].length : 0) || 0;
 
-   if (Number.isInteger(numericStep) && value.includes('.')) {
-        return `Not a decimal value.`;
-    }
-    
+  if(stepDecimalPlaces > 0){
   // Check if the value has the correct number of decimal places as the step
+  if (numericValue === numericMin || numericValue === numericMax) {
+    return null; // No need for further validation
+  }
   if (valueDecimalPlaces !== stepDecimalPlaces) {
     return `Value should increment by ${step}`;
   }
+  }else {
+    if (value.toString().includes('.') && value.toString().split('.')[1].length === 0) {
+      return 'Invalid Input.'; // Error if there's a dot without succeeding digits
+    }
+    // If the step is an integer
+    if ((numericValue - numericMin) % numericStep !== 0) {
+      return `Value should increment by ${step}`;
+    }
+  }
 
-    return null; // Return null if no validation errors
-  };
+  return null;
+};
+
 
   const createDesign = async () => {
   isDesignCreating.value = true;
