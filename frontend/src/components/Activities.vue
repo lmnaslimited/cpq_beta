@@ -23,6 +23,7 @@
       </template>
       <span>{{ __('Make a Call') }}</span>
     </Button>
+    <div v-if="title == 'Notes'" class="space-x-4">
     <Button v-if="title == 'Notes'" variant="solid" @click="showNote()">
       <template #prefix>
         <FeatherIcon name="plus" class="h-4 w-4" />
@@ -33,8 +34,9 @@
   <template #prefix>
     <FeatherIcon name="plus" class="h-4 w-4" /> 
   </template>
-  <span>Log Notes Content</span>
+  <span>{{ __('Recommend Item') }}</span>
 </Button>
+</div>
     <Button v-else-if="title == 'Tasks'" variant="solid" @click="showTask()">
       <template #prefix>
         <FeatherIcon name="plus" class="h-4 w-4" />

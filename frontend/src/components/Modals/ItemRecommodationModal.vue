@@ -13,7 +13,7 @@
     }"
   >
   <template #body-title>
-      <h2 class="text-2xl font-bold leading-6 text-gray-900">Item Recommondation:</h2>
+      <h2 class="text-2xl font-bold leading-6 text-gray-900">Item Recommendation:</h2>
     </template>
     <template #body-content>
       <div>
