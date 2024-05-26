@@ -38,7 +38,9 @@
         </div>
         <div v-if="attributes && attributes.items && attributes.items.length">
           <ul>
-          <li v-for="(item, index) in attributes.items" :key="index">{{ item.name }}</li>
+           <li v-for="(item, index) in attributes.items" :key="index">
+              {{ item.name }} - <span class="text-pink-700">{{ formatPrice(item.price) }}</span>
+            </li>
         </ul>
         </div>
       </div>
@@ -54,6 +56,14 @@ const props = defineProps({
   attributes: Object,
   items: Array
 })
+
+// Function to format the price with commas
+function formatPrice(price) {
+  if (price === 'Price not available') {
+    return price
+  }
+  return 'Rs ' + parseFloat(price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
 
 // Define any other necessary variables or functions here
 const show = ref(false)

@@ -1308,6 +1308,18 @@ async function logNotesContent() {
   }
 }
 
+//for speech to text ai integration
+const voiceRecord = computed(() => {
+    if (all_activities.data?.calls) {
+      return all_activities.data.calls.map(call => {
+        
+        return call.recording_url
+      })
+    } else {
+      return []
+    }
+  })
+//console.log(voiceRecord.value)
 </script>
 
 <style scoped>
