@@ -301,7 +301,6 @@ onMounted(() => {
   customBulkActions.value = list.value?.data?.bulkActions || []
   customListActions.value = list.value?.data?.listActions || []
 })
-
 defineExpose({
   customListActions,
 })

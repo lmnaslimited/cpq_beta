@@ -140,6 +140,12 @@ const links = [
     icon: DealsIcon,
     to: 'Designs',
   },
+  //Added for Items Menu in the Side bar. Used DealsIcon for it 
+  {
+    label: 'Items',
+    icon: DealsIcon,
+    to: 'Items',
+  },
   {
     label: 'Contacts',
     icon: ContactsIcon,
@@ -219,6 +225,9 @@ function getIcon(routeName) {
     case 'Deals':
       return DealsIcon
     case 'Designs':
+      return DealsIcon
+    //Routing the ItemsIcon
+    case 'Items':
       return DealsIcon
     case 'Contacts':
       return ContactsIcon
