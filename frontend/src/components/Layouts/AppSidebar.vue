@@ -146,6 +146,12 @@ const links = [
     icon: DealsIcon,
     to: 'Items',
   },
+  //Added For Offers Menu
+  {
+    label: 'Quotations',
+    icon: DealsIcon,
+    to: 'Quotations',
+  },
   {
     label: 'Contacts',
     icon: ContactsIcon,
@@ -228,6 +234,8 @@ function getIcon(routeName) {
       return DealsIcon
     //Routing the ItemsIcon
     case 'Items':
+      return DealsIcon
+    case 'Quotations':
       return DealsIcon
     case 'Contacts':
       return ContactsIcon

@@ -1,10 +1,11 @@
+
 <template>
   <ListView
     :class="$attrs.class"
     :columns="columns"
     :rows="rows"
     :options="{
-      getRowRoute: (row) => ({ name: 'Deal', params: { dealId: row.name } }),
+      getRowRoute: (row) => ({ name: 'Quotation', params: { quotationId: row.name } }),
       selectable: options.selectable,
       showTooltip: options.showTooltip,
       resizeColumn: options.resizeColumn,
@@ -20,19 +21,30 @@
         v-slot="{ idx, column, item }"
         :row="row"
       >
-        <div v-if="column.key === '_assign'" class="flex items-center">
-          <MultipleAvatar
-            :avatars="item"
-            size="sm"
-            @click="
-              (event) => emit('applyFilter', { event, idx, column, item })
-            "
-          />
+        <div
+          v-if="column.key === '_assign'"
+          class="flex items-center"
+          @click="(event) => emit('applyFilter', { event, idx, column, item })"
+        >
+          <MultipleAvatar :avatars="item" size="sm" />
         </div>
-        <ListRowItem v-else :item="item">
+        <ListRowItem
+          v-else
+          :item="item"
+          @click="(event) => emit('applyFilter', { event, idx, column, item })"
+        >
           <template #prefix>
             <div v-if="column.key === 'status'">
-              <IndicatorIcon :class="item.color" />
+              <div v-if="row.status === 'Open'" > 
+              <IndicatorIcon class="text-blue-500" />
+              </div>
+              <div v-else-if="row.status === 'Draft'"> 
+              <IndicatorIcon class="text-red-500" />
+              </div>
+              <div v-else-if="row.status === 'submitted'"> 
+              <IndicatorIcon class="text-blue-500" />
+              </div>
+              <div v-else><IndicatorIcon :class="item.color" /></div>
             </div>
             <div v-else-if="column.key === 'organization'">
               <Avatar
@@ -56,59 +68,42 @@
               <PhoneIcon class="h-4 w-4" />
             </div>
           </template>
-          <template #default="{ label }">
-            <div
-              v-if="
-                [
-                  'modified',
-                  'creation',
-                  'first_response_time',
-                  'first_responded_on',
-                  'response_by',
-                ].includes(column.key)
-              "
-              class="truncate text-base"
-              @click="
-                (event) => emit('applyFilter', { event, idx, column, item })
-              "
-            >
-              <Tooltip :text="item.label">
-                <div>{{ item.timeAgo }}</div>
-              </Tooltip>
-            </div>
-            <div
-              v-else-if="column.key === 'sla_status'"
-              class="truncate text-base"
-            >
-              <Badge
-                v-if="item.value"
-                :variant="'subtle'"
-                :theme="item.color"
-                size="md"
-                :label="item.value"
-                @click="
-                  (event) => emit('applyFilter', { event, idx, column, item })
-                "
-              />
-            </div>
-            <div v-else-if="column.type === 'Check'">
-              <FormControl
-                type="checkbox"
-                :modelValue="item"
-                :disabled="true"
-                class="text-gray-900"
-              />
-            </div>
-            <div
-              v-else
-              class="truncate text-base"
-              @click="
-                (event) => emit('applyFilter', { event, idx, column, item })
-              "
-            >
-              {{ label }}
-            </div>
-          </template>
+          <div
+            v-if="
+              [
+                'modified',
+                'creation',
+                'first_response_time',
+                'first_responded_on',
+                'response_by',
+              ].includes(column.key)
+            "
+            class="truncate text-base"
+          >
+            <Tooltip :text="item.label">
+              <div>{{ item.timeAgo }}</div>
+            </Tooltip>
+          </div>
+          <div
+            v-else-if="column.key === 'sla_status'"
+            class="truncate text-base"
+          >
+            <Badge
+              v-if="item.value"
+              :variant="'subtle'"
+              :theme="item.color"
+              size="md"
+              :label="item.value"
+            />
+          </div>
+          <div v-else-if="column.type === 'Check'">
+            <FormControl
+              type="checkbox"
+              :modelValue="item"
+              :disabled="true"
+              class="text-gray-900"
+            />
+          </div>
         </ListRowItem>
       </ListRow>
     </ListRows>
@@ -137,7 +132,7 @@
   <EditValueModal
     v-model="showEditModal"
     v-model:unselectAll="unselectAllAction"
-    doctype="CRM Deal"
+    doctype="Quotation"
     :selectedValues="selectedValues"
     @reload="list.reload()"
   />
@@ -229,7 +224,7 @@ function deleteValues(selections, unselectAll) {
         onClick: (close) => {
           call('frappe.desk.reportview.delete_items', {
             items: JSON.stringify(Array.from(selections)),
-            doctype: 'CRM Deal',
+            doctype: 'Quotation',
           }).then(() => {
             createToast({
               title: __('Deleted successfully'),
@@ -245,8 +240,6 @@ function deleteValues(selections, unselectAll) {
     ],
   })
 }
-
-
 
 const customBulkActions = ref([])
 const customListActions = ref([])

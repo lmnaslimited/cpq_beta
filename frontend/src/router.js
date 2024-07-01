@@ -121,6 +121,18 @@ const routes = [
     props: true,
   },
   {
+    path: '/Quotations',
+    name: 'Quotations',
+    component: () => import('@/pages/Quotations.vue'),
+    meta: { scrollPos: { top: 0, left: 0 } },
+  },
+  {
+    path: '/quotations/:quotationId',
+    name: 'Quotation',
+    component: () => import('@/pages/Quotation.vue'),
+    props: true,
+  },
+  {
     path: '/:invalidpath',
     name: 'Invalid Page',
     component: () => import('@/pages/InvalidPage.vue'),

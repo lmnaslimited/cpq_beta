@@ -4,7 +4,7 @@
     :columns="columns"
     :rows="rows"
     :options="{
-      getRowRoute: (row) => ({ name: 'Deal', params: { dealId: row.name } }),
+      getRowRoute: (row) => ({ name: 'Item', params: { itemId: row.name } }),
       selectable: options.selectable,
       showTooltip: options.showTooltip,
       resizeColumn: options.resizeColumn,
@@ -20,19 +20,35 @@
         v-slot="{ idx, column, item }"
         :row="row"
       >
-        <div v-if="column.key === '_assign'" class="flex items-center">
-          <MultipleAvatar
-            :avatars="item"
-            size="sm"
-            @click="
-              (event) => emit('applyFilter', { event, idx, column, item })
-            "
-          />
+        <div
+          v-if="column.key === 'modified'"
+          class="flex items-center"
+          @click="(event) => emit('applyFilter', { event, idx, column, item })"
+        >
+        <Tooltip :text="item.label">
+              <div>{{ row.modified }}</div>
+            </Tooltip>
         </div>
-        <ListRowItem v-else :item="item">
+        <div
+          v-if="column.key === 'item_code'"
+          class="flex items-center"
+          @click="(event) => emit('applyFilter', { event, idx, column, item })"
+        >
+        <Tooltip :text="item.label">
+              <div>{{ row.item_code }}</div>
+            </Tooltip>
+        </div>
+        <ListRowItem
+          v-else
+          :item="item"
+          @click="(event) => emit('applyFilter', { event, idx, column, item })"
+        >
           <template #prefix>
             <div v-if="column.key === 'status'">
-              <IndicatorIcon :class="item.color" />
+              <div v-if="row.has_variants && !row.variant_of && !row.disabled" class="text-red-500 bg-red-100 rounded-md text-sm font-medium px-2 py-1 w-20 text-center">Template</div>
+              <div v-else-if="!row.has_variants && row.variant_of && !row.disabled" class="text-green-600 bg-green-100 rounded-md text-sm font-medium px-2 py-1 w-20 text-center">Variant</div>
+              <div v-else-if="!row.has_variants && !row.variant_of && !row.disabled" class="text-blue-500 bg-blue-100 rounded-md text-sm font-medium px-2 py-1 w-20 text-center">Enabled</div>
+              <div v-else-if="row.disabled" class="text-gray-500 bg-gray-100 rounded-md text-sm font-medium px-2 py-1 w-20 text-center">Disabled</div>
             </div>
             <div v-else-if="column.key === 'organization'">
               <Avatar
@@ -43,72 +59,49 @@
                 size="sm"
               />
             </div>
-            <div v-else-if="column.key === 'deal_owner'">
-              <Avatar
-                v-if="item.full_name"
-                class="flex items-center"
-                :image="item.user_image"
-                :label="item.full_name"
-                size="sm"
-              />
+            <div v-else-if="column.key === 'item_group'">
+             
             </div>
             <div v-else-if="column.key === 'mobile_no'">
               <PhoneIcon class="h-4 w-4" />
             </div>
           </template>
-          <template #default="{ label }">
-            <div
-              v-if="
-                [
-                  'modified',
-                  'creation',
-                  'first_response_time',
-                  'first_responded_on',
-                  'response_by',
-                ].includes(column.key)
-              "
-              class="truncate text-base"
-              @click="
-                (event) => emit('applyFilter', { event, idx, column, item })
-              "
-            >
-              <Tooltip :text="item.label">
-                <div>{{ item.timeAgo }}</div>
-              </Tooltip>
-            </div>
-            <div
-              v-else-if="column.key === 'sla_status'"
-              class="truncate text-base"
-            >
-              <Badge
-                v-if="item.value"
-                :variant="'subtle'"
-                :theme="item.color"
-                size="md"
-                :label="item.value"
-                @click="
-                  (event) => emit('applyFilter', { event, idx, column, item })
-                "
-              />
-            </div>
-            <div v-else-if="column.type === 'Check'">
-              <FormControl
-                type="checkbox"
-                :modelValue="item"
-                :disabled="true"
-                class="text-gray-900"
-              />
-            </div>
-            <div
-              v-else
-              class="truncate text-base"
-              @click="
-                (event) => emit('applyFilter', { event, idx, column, item })
-              "
-            >
-              {{ label }}
-            </div>
-          </template>
+          <div
+            v-if="
+              [
+                'modified',
+                'creation',
+                'first_response_time',
+                'first_responded_on',
+                'response_by',
+              ].includes(column.key)
+            "
+            class="truncate text-base"
+          >
+            <Tooltip :text="item.label">
+              <div>{{ item.timeAgo }}</div>
+            </Tooltip>
+          </div>
+          <div
+            v-else-if="column.key === 'sla_status'"
+            class="truncate text-base"
+          >
+            <Badge
+              v-if="item.value"
+              :variant="'subtle'"
+              :theme="item.color"
+              size="md"
+              :label="item.value"
+            />
+          </div>
+          <div v-else-if="column.type === 'Check'">
+            <FormControl
+              type="checkbox"
+              :modelValue="item"
+              :disabled="true"
+              class="text-gray-900"
+            />
+          </div>
         </ListRowItem>
       </ListRow>
     </ListRows>
@@ -137,7 +130,7 @@
   <EditValueModal
     v-model="showEditModal"
     v-model:unselectAll="unselectAllAction"
-    doctype="CRM Deal"
+    doctype="Item"
     :selectedValues="selectedValues"
     @reload="list.reload()"
   />
@@ -229,7 +222,7 @@ function deleteValues(selections, unselectAll) {
         onClick: (close) => {
           call('frappe.desk.reportview.delete_items', {
             items: JSON.stringify(Array.from(selections)),
-            doctype: 'CRM Deal',
+            doctype: 'Item',
           }).then(() => {
             createToast({
               title: __('Deleted successfully'),
@@ -245,8 +238,6 @@ function deleteValues(selections, unselectAll) {
     ],
   })
 }
-
-
 
 const customBulkActions = ref([])
 const customListActions = ref([])
@@ -289,6 +280,7 @@ onMounted(() => {
     $dialog,
     router,
   })
+console.log(list.value.data)
   customBulkActions.value = list.value?.data?.bulkActions || []
   customListActions.value = list.value?.data?.listActions || []
 })
@@ -297,3 +289,4 @@ defineExpose({
   customListActions,
 })
 </script>
+
