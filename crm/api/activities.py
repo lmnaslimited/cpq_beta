@@ -1,3 +1,4 @@
+
 import json
 
 import frappe
@@ -13,6 +14,8 @@ def get_activities(name):
 		return get_lead_activities(name)
 	elif frappe.db.exists("Design", name):
 		return get_design_activities(name)
+	elif frappe.db.exists("Item", name):
+		return get_item_activities(name)
 	else:
 		frappe.throw(_("Document not found"), frappe.DoesNotExistError)
 
@@ -375,6 +378,135 @@ def get_design_activities(name):
 
 	return activities, calls, notes, tasks
 
+# to route the activities for the item 
+
+def get_item_activities(name):
+	get_docinfo('', "Item", name)
+	docinfo = frappe.response["docinfo"]
+	deal_meta = frappe.get_meta("Item")
+	deal_fields = {field.fieldname: {"label": field.label, "options": field.options} for field in deal_meta.fields}
+	avoid_fields = [
+		"item",
+		"response_by",
+		"sla_creation",
+		"sla",
+		"first_response_time",
+		"first_responded_on",
+	]
+
+	doc = frappe.db.get_values("Item", name, ["creation", "owner"])[0]
+	# item = doc[2]
+
+	activities = []
+	calls = []
+	notes = []
+	tasks = []
+	prices = []
+	creation_text = "created this item"
+
+	# if item:
+	# 	activities, calls, notes, tasks = get_item_activities(item)
+	# 	creation_text = "converted the lead to this deal"
+
+	activities.append({
+		"activity_type": "creation",
+		"creation": doc[0],
+		"owner": doc[1],
+		"data": creation_text,
+		"is_lead": False,
+	})
+
+	docinfo.versions.reverse()
+
+	for version in docinfo.versions:
+		data = json.loads(version.data)
+		if not data.get("changed"):
+			continue
+
+		if change := data.get("changed")[0]:
+			field = deal_fields.get(change[0], None)
+
+			if not field or change[0] in avoid_fields or (not change[1] and not change[2]):
+				continue
+
+			field_label = field.get("label") or change[0]
+			field_option = field.get("options") or None
+
+			activity_type = "changed"
+			data = {
+				"field": change[0],
+				"field_label": field_label,
+				"old_value": change[1],
+				"value": change[2],
+			}
+
+			if not change[1] and change[2]:
+				activity_type = "added"
+				data = {
+					"field": change[0],
+					"field_label": field_label,
+					"value": change[2],
+				}
+			elif change[1] and not change[2]:
+				activity_type = "removed"
+				data = {
+					"field": change[0],
+					"field_label": field_label,
+					"value": change[1],
+				}
+
+		activity = {
+			"activity_type": activity_type,
+			"creation": version.creation,
+			"owner": version.owner,
+			"data": data,
+			"is_lead": False,
+			"options": field_option,
+		}
+		activities.append(activity)
+
+	for comment in docinfo.comments:
+		activity = {
+			"name": comment.name,
+			"activity_type": "comment",
+			"creation": comment.creation,
+			"owner": comment.owner,
+			"content": comment.content,
+			"is_lead": False,
+		}
+		activities.append(activity)
+
+	for communication in docinfo.communications:
+		activity = {
+			"activity_type": "communication",
+			"creation": communication.creation,
+			"data": {
+				"subject": communication.subject,
+				"content": communication.content,
+				"sender_full_name": communication.sender_full_name,
+				"sender": communication.sender,
+				"recipients": communication.recipients,
+				"cc": communication.cc,
+				"bcc": communication.bcc,
+				"attachments": get_attachments(communication.name),
+				"read_by_recipient": communication.read_by_recipient,
+			},
+			"is_lead": False,
+		}
+		activities.append(activity)
+
+	calls = calls + get_linked_calls(name)
+	notes = notes + get_linked_notes(name)
+	tasks = tasks + get_linked_tasks(name)
+	prices = prices + get_linked_prices(name)
+
+
+	activities.sort(key=lambda x: x["creation"], reverse=True)
+	activities = handle_multiple_versions(activities)
+
+	return activities, calls, notes, tasks, prices
+
+
 
 @redis_cache()
 def get_attachments(doctype, name):
@@ -464,3 +596,21 @@ def get_linked_tasks(name):
 		],
 	)
 	return tasks or []
+
+def get_linked_prices(name):
+	prices = frappe.db.get_all(
+		"Item Price",
+		filters={"item_code": name},
+		fields=[
+			"name",
+			"price_list",
+			"price_list_rate",
+			"currency",
+			# "assigned_to",
+			# "due_date",
+			# "priority",
+			# "status",
+			# "modified",
+		],
+	)
+	return prices or []

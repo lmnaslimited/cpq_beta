@@ -194,7 +194,6 @@ const currentView = computed(() => {
     icon: _view?.icon || 'list',
   }
 })
-
 const view = ref({
   name: '',
   label: '',

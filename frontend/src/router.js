@@ -107,6 +107,31 @@ const routes = [
     name: 'Dashboard',
     component: () => import('@/pages/Dashboard.vue'),
   },
+  //To route to the Item list view 
+  {
+    path: '/Items',
+    name: 'Items',
+    component: () => import('@/pages/Items.vue'),
+    meta: { scrollPos: { top: 0, left: 0 } },
+  },
+  {
+    path: '/items/:itemId',
+    name: 'Item',
+    component: () => import('@/pages/Item.vue'),
+    props: true,
+  },
+  {
+    path: '/Quotations',
+    name: 'Quotations',
+    component: () => import('@/pages/Quotations.vue'),
+    meta: { scrollPos: { top: 0, left: 0 } },
+  },
+  {
+    path: '/quotations/:quotationId',
+    name: 'Quotation',
+    component: () => import('@/pages/Quotation.vue'),
+    props: true,
+  },
   {
     path: '/:invalidpath',
     name: 'Invalid Page',

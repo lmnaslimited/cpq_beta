@@ -6,21 +6,21 @@ from crm.api.doc import get_doctype_fields, get_assigned_users
 from crm.fcrm.doctype.crm_form_script.crm_form_script import get_form_script
 
 @frappe.whitelist()
-def get_design(name):
-  Design = frappe.qb.DocType("Design")
+def get_quotation(name):
+  Quotation = frappe.qb.DocType("Quotation")
 
-  query = frappe.qb.from_(Design).select("*").where(Design.name == name).limit(1)
+  query = frappe.qb.from_(Quotation).select("*").where(Quotation.name == name).limit(1)
 
-  design = query.run(as_dict=True)
-  if not len(design):
-    frappe.throw(_("Design not found"), frappe.DoesNotExistError)
-  design = design.pop()
+  quotation = query.run(as_dict=True)
+  if not len(quotation):
+    frappe.throw(_("Quotation not found"), frappe.DoesNotExistError)
+  quotation = quotation.pop()
 
-  design["doctype_fields"], design["all_fields"] = get_doctype_fields("Design", name)
-  design["doctype"] = "Design"
-  design["_form_script"] = get_form_script('Design')
-  design["_assign"] = get_assigned_users("Design", design.name)
-  return design
+  quotation["doctype_fields"], quotation["all_fields"] = get_doctype_fields("Quotation", name)
+  quotation["doctype"] = "Quotation"
+  quotation["_form_script"] = get_form_script('Quotation')
+  quotation["_assign"] = get_assigned_users("Quotation", quotation.name)
+  return quotation
 
 @frappe.whitelist()
 def get_item_variant():
@@ -30,12 +30,12 @@ def get_item_variant():
 
 
 @frappe.whitelist(allow_guest=True)
-def save_design(data):
+def save_quotation(data):
     try:
         data = frappe.parse_json(data)
         
         # Define the doctype where the dynamic fields will be added
-        doctype = "Design"
+        doctype = "Quotation"
 
         # Initialize dictionaries for main doc and child table data
         main_doc_data = {}
@@ -78,7 +78,7 @@ def save_design(data):
             "docname": doc.name
         }
     except Exception as e:
-        frappe.log_error(frappe.get_traceback(), _("Failed to save design"))
+        frappe.log_error(frappe.get_traceback(), _("Failed to save quotation"))
         return {
             "status": "error",
             "message": str(e)
