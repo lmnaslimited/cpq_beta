@@ -15,12 +15,20 @@
       </template>
       <span>{{ __('Make a Call') }}</span>
     </Button>
-    <Button v-else-if="title == 'Notes'" variant="solid" @click="showNote()">
+    <div v-if="title == 'Notes'" class="space-x-4">
+    <Button v-if="title == 'Notes'" variant="solid" @click="showNote()">
       <template #prefix>
         <FeatherIcon name="plus" class="h-4 w-4" />
       </template>
       <span>{{ __('New Note') }}</span>
     </Button>
+<Button v-if="title == 'Notes'" variant="solid" @click="logNotesContent()">
+  <template #prefix>
+    <FeatherIcon name="plus" class="h-4 w-4" /> 
+  </template>
+  <span>{{ __('Recommend Item') }}</span>
+</Button>
+</div>
     <Button v-else-if="title == 'Tasks'" variant="solid" @click="showTask()">
       <template #prefix>
         <FeatherIcon name="plus" class="h-4 w-4" />
@@ -608,49 +616,43 @@
     <Button v-else-if="title == 'Tasks'" :label="__('Create Task')" @click="showTask()" />
     <Button v-else-if="title == 'Prices'" :label="__('Create Price')" @click="showPrice()" />
   </div>
-  <CommunicationArea ref="emailBox" v-if="['Emails', 'Activity'].includes(title)" v-model="doc"
-    v-model:reload="reload_email" :doctype="doctype" @scroll="scroll" />
-  <WhatsAppBox ref="whatsappBox" v-if="title == 'WhatsApp'" v-model="doc" v-model:reply="replyMessage"
-    v-model:whatsapp="whatsappMessages" :doctype="doctype" @scroll="scroll" />
-  <NoteModal v-model="showNoteModal" v-model:reloadNotes="all_activities" :note="note" :doctype="doctype"
-    :doc="doc.data?.name" />
-  <TaskModal v-model="showTaskModal" v-model:reloadTasks="all_activities" :task="task" :doctype="doctype"
-    :doc="doc.data?.name" />
-  <PriceModal v-model="showPriceModal" v-model:reloadPrices="all_activities" :price="price" :doctype="doctype"
-    :doc="doc.data?.name" />
-  <WhatsappTemplateSelectorModal v-if="whatsappEnabled" v-model="showWhatsappTemplates"
-    @send="(t) => sendTemplate(t)" />
-
-    <!-- <div v-if="title == 'Prices'" class="activity px-10 pb-5">
-    <ViewControls
-      ref="viewControls"
-      v-model="prices"
-      v-model:loadMore="loadMore"
-      v-model:resizeColumn="triggerResize"
-      v-model:updatedPageCount="updatedPageCount"
-      doctype="Item Price"
-    />
-    <PricesListView
-        ref="pricesListView"
-        v-if="l_prices && rows.length"
-        v-model="l_prices"
-        v-model:list="prices" 
-        :rows="rows"
-        :columns="prices.data.columns"
-        :options="{
-          showTooltip: false,
-          resizeColumn: true,
-          rowCount: rows.length,
-          totalCount: rows.length,
-        }"
-        @loadMore="() => loadMore++"
-        @columnWidthUpdated="() => triggerResize++"
-        @updatePageCount="(count) => (updatedPageCount = count)"
-        @showPrice="showPrice"
-        @applyFilter="(data) => viewControls.applyFilter(data)"
-    />
-  </div> -->
-
+  <CommunicationArea
+    ref="emailBox"
+    v-if="['Emails', 'Activity'].includes(title)"
+    v-model="doc"
+    v-model:reload="reload_email"
+    :doctype="doctype"
+    @scroll="scroll"
+  />
+  <WhatsAppBox
+    ref="whatsappBox"
+    v-if="title == 'WhatsApp'"
+    v-model="doc"
+    v-model:reply="replyMessage"
+    v-model:whatsapp="whatsappMessages"
+    :doctype="doctype"
+    @scroll="scroll"
+  />
+  <NoteModal
+    v-model="showNoteModal"
+    v-model:reloadNotes="all_activities"
+    :note="note"
+    :doctype="doctype"
+    :doc="doc.data?.name"
+  />
+  <TaskModal
+    v-model="showTaskModal"
+    v-model:reloadTasks="all_activities"
+    :task="task"
+    :doctype="doctype"
+    :doc="doc.data?.name"
+  />
+  <WhatsappTemplateSelectorModal
+    v-if="whatsappEnabled"
+    v-model="showWhatsappTemplates"
+    @send="(t) => sendTemplate(t)"
+  />
+   <ItemRecommodationModal :attributes="extractedAttributes" v-model:show="showItemRecommodationModal" @close="showItemRecommodationModal = false" />
 </template>
 <script setup>
 import UserAvatar from '@/components/UserAvatar.vue'
@@ -719,6 +721,11 @@ import {
   onBeforeUnmount,
 } from 'vue'
 import { useRoute } from 'vue-router'
+import ItemRecommodationModal from '@/components/Modals/ItemRecommodationModal.vue'
+
+// Reactive variables
+const showItemRecommodationModal = ref(false)
+const extractedAttributes = ref(null)
 
 const { makeCall, $socket } = globalStore()
 const { getUser } = usersStore()
@@ -1266,6 +1273,54 @@ nextTick(() => {
   const hash = route.hash.slice(1) || null
   scroll(hash)
 })
+
+// Function to log notes content and fetch attributes
+async function logNotesContent() {
+  const notesContent = computed(() => {
+    if (all_activities.data?.notes) {
+      return all_activities.data.notes.map(note => {
+        // Remove HTML tags using a regular expression
+        const contentWithoutTags = note.content.replace(/<[^>]*>?/gm, '')
+        return contentWithoutTags
+      })
+    } else {
+      return []
+    }
+  })
+
+  // Check if notesContent.value is available
+  if (notesContent.value.length === 0) {
+    console.warn("No notes content available.")
+    return
+  }
+  
+  // Fetch attributes from the server
+  try {
+    const response = await call("crm.api.recom.get_items_with_attributes_from_content", {
+      content: notesContent.value
+    })
+    extractedAttributes.value = response
+    //console.log("Extracted Attributes:", response);
+    
+    // Show the ItemRecommodation modal
+    showItemRecommodationModal.value = true
+  } catch (error) {
+    console.error("Error fetching attributes:", error);
+  }
+}
+
+//for speech to text ai integration
+const voiceRecord = computed(() => {
+    if (all_activities.data?.calls) {
+      return all_activities.data.calls.map(call => {
+        
+        return call.recording_url
+      })
+    } else {
+      return []
+    }
+  })
+//console.log(voiceRecord.value)
 </script>
 
 <style scoped>
