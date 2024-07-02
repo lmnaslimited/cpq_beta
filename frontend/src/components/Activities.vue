@@ -3,13 +3,21 @@
     <div class="flex h-7 items-center text-xl font-semibold text-gray-800">
       {{ __(title) }}
     </div>
-    <Button v-if="title == 'Emails'" variant="solid" @click="$refs.emailBox.show = true">
+    <Button
+      v-if="title == 'Emails'"
+      variant="solid"
+      @click="$refs.emailBox.show = true"
+    >
       <template #prefix>
         <FeatherIcon name="plus" class="h-4 w-4" />
       </template>
       <span>{{ __('New Email') }}</span>
     </Button>
-    <Button v-else-if="title == 'Calls'" variant="solid" @click="makeCall(doc.data.mobile_no)">
+    <Button
+      v-else-if="title == 'Calls'"
+      variant="solid"
+      @click="makeCall(doc.data.mobile_no)"
+    >
       <template #prefix>
         <PhoneIcon class="h-4 w-4" />
       </template>
@@ -27,16 +35,11 @@
       </template>
       <span>{{ __('New Task') }}</span>
     </Button>
-
-    <Button v-else-if="title == 'Prices'" variant="solid" @click="showPrice()">
-      <template #prefix>
-        <FeatherIcon name="plus" class="h-4 w-4" />
-      </template>
-      <span>{{ __('New Price') }}</span>
-    </Button>
-
     <div class="flex gap-2" v-else-if="title == 'WhatsApp'">
-      <Button :label="__('Send Template')" @click="showWhatsappTemplates = true" />
+      <Button
+        :label="__('Send Template')"
+        @click="showWhatsappTemplates = true"
+      />
       <Button variant="solid" @click="$refs.whatsappBox.show()">
         <template #prefix>
           <FeatherIcon name="plus" class="h-4 w-4" />
@@ -52,47 +55,79 @@
           </template>
           <span>{{ __('New') }}</span>
           <template #suffix>
-            <FeatherIcon :name="open ? 'chevron-up' : 'chevron-down'" class="h-4 w-4" />
+            <FeatherIcon
+              :name="open ? 'chevron-up' : 'chevron-down'"
+              class="h-4 w-4"
+            />
           </template>
         </Button>
       </template>
     </Dropdown>
   </div>
-  <div v-if="all_activities?.loading"
-    class="flex flex-1 flex-col items-center justify-center gap-3 text-xl font-medium text-gray-500">
+  <div
+    v-if="all_activities?.loading"
+    class="flex flex-1 flex-col items-center justify-center gap-3 text-xl font-medium text-gray-500"
+  >
     <LoadingIndicator class="h-6 w-6" />
     <span>{{ __('Loading...') }}</span>
   </div>
-  <div v-else-if="title == 'WhatsApp' && whatsappMessages.data?.length" class="activities flex-1 overflow-y-auto">
-    <WhatsAppArea class="px-10" v-model="whatsappMessages" v-model:reply="replyMessage"
-      :messages="whatsappMessages.data" />
+  <div
+    v-else-if="title == 'WhatsApp' && whatsappMessages.data?.length"
+    class="activities flex-1 overflow-y-auto"
+  >
+    <WhatsAppArea
+      class="px-10"
+      v-model="whatsappMessages"
+      v-model:reply="replyMessage"
+      :messages="whatsappMessages.data"
+    />
   </div>
   <div v-else-if="activities?.length" class="activities flex-1 overflow-y-auto">
-    <div v-if="title == 'Notes'" class="activity grid grid-cols-1 gap-4 px-10 pb-5 lg:grid-cols-2 xl:grid-cols-3">
-      <div v-for="note in activities"
+    <div
+      v-if="title == 'Notes'"
+      class="activity grid grid-cols-1 gap-4 px-10 pb-5 lg:grid-cols-2 xl:grid-cols-3"
+    >
+      <div
+        v-for="note in activities"
         class="group flex h-48 cursor-pointer flex-col justify-between gap-2 rounded-md bg-gray-50 px-4 py-3 hover:bg-gray-100"
-        @click="showNote(note)">
+        @click="showNote(note)"
+      >
         <div class="flex items-center justify-between">
           <div class="truncate text-lg font-medium">
             {{ note.title }}
           </div>
-          <Dropdown :options="[
-            {
-              label: __('Delete'),
-              icon: 'trash-2',
-              onClick: () => deleteNote(note.name),
-            },
-          ]" @click.stop class="h-6 w-6">
-            <Button icon="more-horizontal" variant="ghosted" class="!h-6 !w-6 hover:bg-gray-100" />
+          <Dropdown
+            :options="[
+              {
+                label: __('Delete'),
+                icon: 'trash-2',
+                onClick: () => deleteNote(note.name),
+              },
+            ]"
+            @click.stop
+            class="h-6 w-6"
+          >
+            <Button
+              icon="more-horizontal"
+              variant="ghosted"
+              class="!h-6 !w-6 hover:bg-gray-100"
+            />
           </Dropdown>
         </div>
-        <TextEditor v-if="note.content" :content="note.content" :editable="false"
+        <TextEditor
+          v-if="note.content"
+          :content="note.content"
+          :editable="false"
           editor-class="!prose-sm max-w-none !text-sm text-gray-600 focus:outline-none"
-          class="flex-1 overflow-hidden" />
+          class="flex-1 overflow-hidden"
+        />
         <div class="mt-1 flex items-center justify-between gap-2">
           <div class="flex items-center gap-2 truncate">
             <UserAvatar :user="note.owner" size="xs" />
-            <div class="truncate text-sm text-gray-800" :title="getUser(note.owner).full_name">
+            <div
+              class="truncate text-sm text-gray-800"
+              :title="getUser(note.owner).full_name"
+            >
               {{ getUser(note.owner).full_name }}
             </div>
           </div>
@@ -104,13 +139,12 @@
         </div>
       </div>
     </div>
-
-    
-
     <div v-else-if="title == 'Tasks'" class="activity px-10 pb-5">
       <div v-for="(task, i) in activities">
-        <div class="flex cursor-pointer gap-6 rounded p-2.5 duration-300 ease-in-out hover:bg-gray-50"
-          @click="showTask(task)">
+        <div
+          class="flex cursor-pointer gap-6 rounded p-2.5 duration-300 ease-in-out hover:bg-gray-50"
+          @click="showTask(task)"
+        >
           <div class="flex flex-1 flex-col gap-1.5 text-base">
             <div class="font-medium text-gray-900">
               {{ task.title }}
@@ -120,12 +154,18 @@
                 <UserAvatar :user="task.assigned_to" size="xs" />
                 {{ getUser(task.assigned_to).full_name }}
               </div>
-              <div v-if="task.due_date" class="flex items-center justify-center">
+              <div
+                v-if="task.due_date"
+                class="flex items-center justify-center"
+              >
                 <DotIcon class="h-2.5 w-2.5 text-gray-600" :radius="2" />
               </div>
               <div v-if="task.due_date">
-                <Tooltip :text="dateFormat(task.due_date, 'ddd, MMM D, YYYY | hh:mm a')
-                  ">
+                <Tooltip
+                  :text="
+                    dateFormat(task.due_date, 'ddd, MMM D, YYYY | hh:mm a')
+                  "
+                >
                   <div class="flex gap-2">
                     <CalendarIcon />
                     <div>{{ dateFormat(task.due_date, 'D MMM, hh:mm a') }}</div>
@@ -142,127 +182,77 @@
             </div>
           </div>
           <div class="flex items-center gap-1">
-            <Dropdown :options="taskStatusOptions(updateTaskStatus, task)" @click.stop>
+            <Dropdown
+              :options="taskStatusOptions(updateTaskStatus, task)"
+              @click.stop
+            >
               <Tooltip :text="__('Change Status')">
                 <Button variant="ghosted" class="hover:bg-gray-300">
                   <TaskStatusIcon :status="task.status" />
                 </Button>
               </Tooltip>
             </Dropdown>
-            <Dropdown :options="[
-              {
-                label: __('Delete'),
-                icon: 'trash-2',
-                onClick: () => {
-                  $dialog({
-                    title: __('Delete Task'),
-                    message: __('Are you sure you want to delete this task?'),
-                    actions: [
-                      {
-                        label: __('Delete'),
-                        theme: 'red',
-                        variant: 'solid',
-                        onClick(close) {
-                          deleteTask(task.name)
-                          close()
+            <Dropdown
+              :options="[
+                {
+                  label: __('Delete'),
+                  icon: 'trash-2',
+                  onClick: () => {
+                    $dialog({
+                      title: __('Delete Task'),
+                      message: __('Are you sure you want to delete this task?'),
+                      actions: [
+                        {
+                          label: __('Delete'),
+                          theme: 'red',
+                          variant: 'solid',
+                          onClick(close) {
+                            deleteTask(task.name)
+                            close()
+                          },
                         },
-                      },
-                    ],
-                  })
+                      ],
+                    })
+                  },
                 },
-              },
-            ]" @click.stop>
-              <Button icon="more-horizontal" variant="ghosted" class="hover:bg-gray-300" />
+              ]"
+              @click.stop
+            >
+              <Button
+                icon="more-horizontal"
+                variant="ghosted"
+                class="hover:bg-gray-300"
+              />
             </Dropdown>
           </div>
         </div>
-        <div v-if="i < activities.length - 1" class="mx-2 h-px border-t border-gray-200" />
+        <div
+          v-if="i < activities.length - 1"
+          class="mx-2 h-px border-t border-gray-200"
+        />
       </div>
     </div>
-
-    <!-- Prices -->
-
-
-    <div v-else-if="title == 'Prices'" class="activity px-10 pb-5">
-    <ViewControls
-      ref="viewControls"
-      v-model="prices"
-      v-model:loadMore="loadMore"
-      v-model:resizeColumn="triggerResize"
-      v-model:updatedPageCount="updatedPageCount"
-      doctype="Item Price"
-    />
-    <PricesListView
-        ref="pricesListView"
-        v-if="l_prices && rows.length"
-        v-model="l_prices"
-        v-model:list="prices" 
-        :rows="rows"
-        :columns="prices.data.columns"
-        :options="{
-          showTooltip: false,
-          resizeColumn: true,
-          rowCount: rows.length,
-          totalCount: rows.length,
-        }"
-        @loadMore="() => loadMore++"
-        @columnWidthUpdated="() => triggerResize++"
-        @updatePageCount="(count) => (updatedPageCount = count)"
-        @showPrice="showPrice"
-        @applyFilter="(data) => viewControls.applyFilter(data)"
-    />
-    
-  </div>
-
-  <!-- Variant Tab  -->
-
-
-  <!-- <div v-if="title == 'Variants'" class="activity px-10 pb-5">
-    <ViewControls
-      ref="viewControls"
-      v-model="prices"
-      v-model:loadMore="loadMore"
-      v-model:resizeColumn="triggerResize"
-      v-model:updatedPageCount="updatedPageCount"
-      doctype="Item Price"
-    />
-    <PricesListView
-        ref="pricesListView"
-        v-if="l_prices && rows.length"
-        v-model="l_prices"
-        v-model:list="prices" 
-        :rows="rows"
-        :columns="prices.data.columns"
-        :options="{
-          showTooltip: false,
-          resizeColumn: true,
-          rowCount: rows.length,
-          totalCount: rows.length,
-        }"
-        @loadMore="() => loadMore++"
-        @columnWidthUpdated="() => triggerResize++"
-        @updatePageCount="(count) => (updatedPageCount = count)"
-        @showPrice="showPrice"
-        @applyFilter="(data) => viewControls.applyFilter(data)"
-    />
-  
-  </div> -->
-
-
-    <!-- Calls -->
-
     <div v-else-if="title == 'Calls'" class="activity">
       <div v-for="(call, i) in activities">
         <div class="grid grid-cols-[30px_minmax(auto,_1fr)] gap-4 px-10">
           <div
             class="relative flex justify-center after:absolute after:left-[50%] after:top-0 after:-z-10 after:border-l after:border-gray-200"
-            :class="i != activities.length - 1 ? 'after:h-full' : 'after:h-4'">
-            <div class="z-10 mt-[15px] flex h-7 w-7 items-center justify-center rounded-full bg-gray-100">
-              <component :is="call.type == 'Incoming' ? InboundCallIcon : OutboundCallIcon
-                " class="text-gray-800" />
+            :class="i != activities.length - 1 ? 'after:h-full' : 'after:h-4'"
+          >
+            <div
+              class="z-10 mt-[15px] flex h-7 w-7 items-center justify-center rounded-full bg-gray-100"
+            >
+              <component
+                :is="
+                  call.type == 'Incoming' ? InboundCallIcon : OutboundCallIcon
+                "
+                class="text-gray-800"
+              />
             </div>
           </div>
-          <div class="mb-3 flex max-w-[70%] flex-col gap-3 rounded-md bg-gray-50 p-4">
+          <div
+            class="mb-3 flex max-w-[70%] flex-col gap-3 rounded-md bg-gray-50 p-4"
+          >
             <div class="flex items-center justify-between">
               <div>
                 {{
@@ -287,8 +277,11 @@
                   {{ call.duration }}
                 </div>
               </div>
-              <div v-if="call.recording_url" class="flex cursor-pointer select-none items-center gap-1"
-                @click="call.show_recording = !call.show_recording">
+              <div
+                v-if="call.recording_url"
+                class="flex cursor-pointer select-none items-center gap-1"
+                @click="call.show_recording = !call.show_recording"
+              >
                 <PlayIcon class="h-4 w-4 text-gray-600" />
                 <div class="text-sm text-gray-600">
                   {{
@@ -299,13 +292,19 @@
                 </div>
               </div>
             </div>
-            <div v-if="call.show_recording && call.recording_url"
-              class="flex items-center justify-between rounded border">
+            <div
+              v-if="call.show_recording && call.recording_url"
+              class="flex items-center justify-between rounded border"
+            >
               <audio class="audio-control" controls :src="call.recording_url" />
             </div>
             <div class="flex items-center justify-between">
               <div class="flex items-center gap-1">
-                <Avatar :image="call.caller.image" :label="call.caller.label" size="xl" />
+                <Avatar
+                  :image="call.caller.image"
+                  :label="call.caller.label"
+                  size="xl"
+                />
                 <div class="ml-1 flex flex-col gap-1">
                   <div class="text-base font-medium">
                     {{ __(call.caller.label) }}
@@ -314,8 +313,15 @@
                     {{ call.from }}
                   </div>
                 </div>
-                <FeatherIcon name="arrow-right" class="mx-2 h-5 w-5 text-gray-600" />
-                <Avatar :image="call.receiver.image" :label="call.receiver.label" size="xl" />
+                <FeatherIcon
+                  name="arrow-right"
+                  class="mx-2 h-5 w-5 text-gray-600"
+                />
+                <Avatar
+                  :image="call.receiver.image"
+                  :label="call.receiver.label"
+                  size="xl"
+                />
                 <div class="ml-1 flex flex-col gap-1">
                   <div class="text-base font-medium">
                     {{ __(call.receiver.label) }}
@@ -339,32 +345,43 @@
             activity.other_versions
               ? 'after:translate-y-[calc(-50% - 4px)] after:absolute after:bottom-9 after:left-[50%] after:top-0 after:-z-10 after:w-8 after:rounded-bl-xl after:border-b after:border-l after:border-gray-200'
               : '',
-          ]">
-          <div class="z-10 flex h-7 w-7 items-center justify-center rounded-full bg-gray-100" :class="{
-            'mt-3': [
-              'communication',
-              'incoming_call',
-              'outgoing_call',
-            ].includes(activity.activity_type),
-            'bg-white': ['added', 'removed', 'changed'].includes(
-              activity.activity_type
-            ),
-          }">
-            <component :is="activity.icon" :class="['added', 'removed', 'changed'].includes(activity.activity_type)
-                ? 'text-gray-600'
-                : 'text-gray-800'
-              " />
+          ]"
+        >
+          <div
+            class="z-10 flex h-7 w-7 items-center justify-center rounded-full bg-gray-100"
+            :class="{
+              'mt-3': [
+                'communication',
+                'incoming_call',
+                'outgoing_call',
+              ].includes(activity.activity_type),
+              'bg-white': ['added', 'removed', 'changed'].includes(
+                activity.activity_type
+              ),
+            }"
+          >
+            <component
+              :is="activity.icon"
+              :class="
+                ['added', 'removed', 'changed'].includes(activity.activity_type)
+                  ? 'text-gray-600'
+                  : 'text-gray-800'
+              "
+            />
           </div>
         </div>
         <div v-if="activity.activity_type == 'communication'" class="pb-6">
           <div
-            class="cursor-pointer rounded-md bg-gray-50 p-3 text-base leading-6 transition-all duration-300 ease-in-out">
+            class="cursor-pointer rounded-md bg-gray-50 p-3 text-base leading-6 transition-all duration-300 ease-in-out"
+          >
             <div class="mb-1 flex items-center justify-between gap-2">
               <div class="flex items-center gap-2">
                 <UserAvatar :user="activity.data.sender" size="md" />
                 <span>{{ activity.data.sender_full_name }}</span>
                 <span>&middot;</span>
-                <Tooltip :text="dateFormat(activity.creation, dateTooltipFormat)">
+                <Tooltip
+                  :text="dateFormat(activity.creation, dateTooltipFormat)"
+                >
                   <div class="text-sm text-gray-600">
                     {{ __(timeAgo(activity.creation)) }}
                   </div>
@@ -372,12 +389,20 @@
               </div>
               <div class="flex gap-0.5">
                 <Tooltip :text="__('Reply')">
-                  <Button variant="ghost" class="text-gray-700" @click="reply(activity.data)">
+                  <Button
+                    variant="ghost"
+                    class="text-gray-700"
+                    @click="reply(activity.data)"
+                  >
                     <ReplyIcon class="h-4 w-4" />
                   </Button>
                 </Tooltip>
                 <Tooltip :text="__('Reply All')">
-                  <Button variant="ghost" class="text-gray-700" @click="reply(activity.data, true)">
+                  <Button
+                    variant="ghost"
+                    class="text-gray-700"
+                    @click="reply(activity.data, true)"
+                  >
                     <ReplyAllIcon class="h-4 w-4" />
                   </Button>
                 </Tooltip>
@@ -392,25 +417,44 @@
               </span>
               <span>{{ activity.data.recipients }}</span>
               <span v-if="activity.data.cc">, </span>
-              <span v-if="activity.data.cc" class="mr-1 text-2xs font-bold text-gray-500">
+              <span
+                v-if="activity.data.cc"
+                class="mr-1 text-2xs font-bold text-gray-500"
+              >
                 {{ __('CC') }}:
               </span>
               <span v-if="activity.data.cc">{{ activity.data.cc }}</span>
               <span v-if="activity.data.bcc">, </span>
-              <span v-if="activity.data.bcc" class="mr-1 text-2xs font-bold text-gray-500">
+              <span
+                v-if="activity.data.bcc"
+                class="mr-1 text-2xs font-bold text-gray-500"
+              >
                 {{ __('BCC') }}:
               </span>
               <span v-if="activity.data.bcc">{{ activity.data.bcc }}</span>
             </div>
-            <div class="email-content prose-f max-h-[500px] overflow-y-auto" v-html="activity.data.content" />
+            <div
+              class="email-content prose-f max-h-[500px] overflow-y-auto"
+              v-html="activity.data.content"
+            />
             <div class="flex flex-wrap gap-2">
-              <AttachmentItem v-for="a in activity.data.attachments" :key="a.file_url" :label="a.file_name"
-                :url="a.file_url" />
+              <AttachmentItem
+                v-for="a in activity.data.attachments"
+                :key="a.file_url"
+                :label="a.file_name"
+                :url="a.file_url"
+              />
             </div>
           </div>
         </div>
-        <div class="mb-4" :id="activity.name" v-else-if="activity.activity_type == 'comment'">
-          <div class="mb-0.5 flex items-start justify-stretch gap-2 py-1.5 text-base">
+        <div
+          class="mb-4"
+          :id="activity.name"
+          v-else-if="activity.activity_type == 'comment'"
+        >
+          <div
+            class="mb-0.5 flex items-start justify-stretch gap-2 py-1.5 text-base"
+          >
             <div class="inline-flex flex-wrap gap-1 text-gray-600">
               <span class="font-medium text-gray-800">
                 {{ activity.owner_name }}
@@ -429,18 +473,26 @@
             </div>
           </div>
           <div
-            class="cursor-pointer rounded bg-gray-50 px-4 py-3 text-base leading-6 transition-all duration-300 ease-in-out">
+            class="cursor-pointer rounded bg-gray-50 px-4 py-3 text-base leading-6 transition-all duration-300 ease-in-out"
+          >
             <div v-html="activity.content" />
             <div v-if="activity.attachments.length" class="flex flex-wrap gap-2 mt-2">
-              <AttachmentItem v-for="a in activity.attachments" :key="a.file_url" :label="a.file_name"
-                :url="a.file_url" />
+              <AttachmentItem
+                v-for="a in activity.attachments"
+                :key="a.file_url"
+                :label="a.file_name"
+                :url="a.file_url"
+              />
             </div>
           </div>
         </div>
-        <div v-else-if="
-          activity.activity_type == 'incoming_call' ||
-          activity.activity_type == 'outgoing_call'
-        " class="mb-3 flex max-w-[70%] flex-col gap-3 rounded-md bg-gray-50 p-4">
+        <div
+          v-else-if="
+            activity.activity_type == 'incoming_call' ||
+            activity.activity_type == 'outgoing_call'
+          "
+          class="mb-3 flex max-w-[70%] flex-col gap-3 rounded-md bg-gray-50 p-4"
+        >
           <div class="flex items-center justify-between">
             <div>
               {{
@@ -465,8 +517,11 @@
                 {{ activity.duration }}
               </div>
             </div>
-            <div v-if="activity.recording_url" class="flex cursor-pointer select-none items-center gap-1"
-              @click="activity.show_recording = !activity.show_recording">
+            <div
+              v-if="activity.recording_url"
+              class="flex cursor-pointer select-none items-center gap-1"
+              @click="activity.show_recording = !activity.show_recording"
+            >
               <PlayIcon class="h-4 w-4 text-gray-600" />
               <div class="text-sm text-gray-600">
                 {{
@@ -477,13 +532,23 @@
               </div>
             </div>
           </div>
-          <div v-if="activity.show_recording && activity.recording_url"
-            class="flex items-center justify-between rounded border">
-            <audio class="audio-control" controls :src="activity.recording_url"></audio>
+          <div
+            v-if="activity.show_recording && activity.recording_url"
+            class="flex items-center justify-between rounded border"
+          >
+            <audio
+              class="audio-control"
+              controls
+              :src="activity.recording_url"
+            ></audio>
           </div>
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-1">
-              <Avatar :image="activity.caller.image" :label="activity.caller.label" size="xl" />
+              <Avatar
+                :image="activity.caller.image"
+                :label="activity.caller.label"
+                size="xl"
+              />
               <div class="ml-1 flex flex-col gap-1">
                 <div class="text-base font-medium">
                   {{ __(activity.caller.label) }}
@@ -492,8 +557,15 @@
                   {{ activity.from }}
                 </div>
               </div>
-              <FeatherIcon name="arrow-right" class="mx-2 h-5 w-5 text-gray-600" />
-              <Avatar :image="activity.receiver.image" :label="activity.receiver.label" size="xl" />
+              <FeatherIcon
+                name="arrow-right"
+                class="mx-2 h-5 w-5 text-gray-600"
+              />
+              <Avatar
+                :image="activity.receiver.image"
+                :label="activity.receiver.label"
+                size="xl"
+              />
               <div class="ml-1 flex flex-col gap-1">
                 <div class="text-base font-medium">
                   {{ __(activity.receiver.label) }}
@@ -512,12 +584,21 @@
                 {{ activity.owner_name }}
               </span>
               <span v-if="activity.type">{{ __(activity.type) }}</span>
-              <span v-if="activity.data.field_label" class="max-w-xs truncate font-medium text-gray-800">
+              <span
+                v-if="activity.data.field_label"
+                class="max-w-xs truncate font-medium text-gray-800"
+              >
                 {{ __(activity.data.field_label) }}
               </span>
               <span v-if="activity.value">{{ __(activity.value) }}</span>
-              <span v-if="activity.data.old_value" class="max-w-xs font-medium text-gray-800">
-                <div class="flex items-center gap-1" v-if="activity.options == 'User'">
+              <span
+                v-if="activity.data.old_value"
+                class="max-w-xs font-medium text-gray-800"
+              >
+                <div
+                  class="flex items-center gap-1"
+                  v-if="activity.options == 'User'"
+                >
                   <UserAvatar :user="activity.data.old_value" size="xs" />
                   {{ getUser(activity.data.old_value).full_name }}
                 </div>
@@ -526,8 +607,14 @@
                 </div>
               </span>
               <span v-if="activity.to">{{ __('to') }}</span>
-              <span v-if="activity.data.value" class="max-w-xs font-medium text-gray-800">
-                <div class="flex items-center gap-1" v-if="activity.options == 'User'">
+              <span
+                v-if="activity.data.value"
+                class="max-w-xs font-medium text-gray-800"
+              >
+                <div
+                  class="flex items-center gap-1"
+                  v-if="activity.options == 'User'"
+                >
                   <UserAvatar :user="activity.data.value" size="xs" />
                   {{ getUser(activity.data.value).full_name }}
                 </div>
@@ -545,21 +632,36 @@
               </Tooltip>
             </div>
           </div>
-          <div v-if="activity.other_versions && activity.show_others" v-for="activity in activity.other_versions"
-            class="flex items-start justify-stretch gap-2 text-base">
+          <div
+            v-if="activity.other_versions && activity.show_others"
+            v-for="activity in activity.other_versions"
+            class="flex items-start justify-stretch gap-2 text-base"
+          >
             <div class="flex items-start gap-1 text-gray-600">
               <div class="flex flex-1 items-center gap-1">
-                <span v-if="activity.data.field_label" class="max-w-xs truncate text-gray-600">
+                <span
+                  v-if="activity.data.field_label"
+                  class="max-w-xs truncate text-gray-600"
+                >
                   {{ __(activity.data.field_label) }}
                 </span>
-                <FeatherIcon name="arrow-right" class="mx-1 h-4 w-4 text-gray-600" />
+                <FeatherIcon
+                  name="arrow-right"
+                  class="mx-1 h-4 w-4 text-gray-600"
+                />
               </div>
               <div class="flex flex-wrap items-center gap-1">
                 <span v-if="activity.type">{{
                   startCase(__(activity.type))
-                  }}</span>
-                <span v-if="activity.data.old_value" class="max-w-xs font-medium text-gray-800">
-                  <div class="flex items-center gap-1" v-if="activity.options == 'User'">
+                }}</span>
+                <span
+                  v-if="activity.data.old_value"
+                  class="max-w-xs font-medium text-gray-800"
+                >
+                  <div
+                    class="flex items-center gap-1"
+                    v-if="activity.options == 'User'"
+                  >
                     <UserAvatar :user="activity.data.old_value" size="xs" />
                     {{ getUser(activity.data.old_value).full_name }}
                   </div>
@@ -568,8 +670,14 @@
                   </div>
                 </span>
                 <span v-if="activity.to">{{ __('to') }}</span>
-                <span v-if="activity.data.value" class="max-w-xs font-medium text-gray-800">
-                  <div class="flex items-center gap-1" v-if="activity.options == 'User'">
+                <span
+                  v-if="activity.data.value"
+                  class="max-w-xs font-medium text-gray-800"
+                >
+                  <div
+                    class="flex items-center gap-1"
+                    v-if="activity.options == 'User'"
+                  >
                     <UserAvatar :user="activity.data.value" size="xs" />
                     {{ getUser(activity.data.value).full_name }}
                   </div>
@@ -589,12 +697,20 @@
             </div>
           </div>
           <div v-if="activity.other_versions">
-            <Button :label="activity.show_others
-                ? __('Hide all Changes')
-                : __('Show all Changes')
-              " variant="outline" @click="activity.show_others = !activity.show_others">
+            <Button
+              :label="
+                activity.show_others
+                  ? __('Hide all Changes')
+                  : __('Show all Changes')
+              "
+              variant="outline"
+              @click="activity.show_others = !activity.show_others"
+            >
               <template #suffix>
-                <FeatherIcon :name="activity.show_others ? 'chevron-up' : 'chevron-down'" class="h-4 text-gray-600" />
+                <FeatherIcon
+                  :name="activity.show_others ? 'chevron-up' : 'chevron-down'"
+                  class="h-4 text-gray-600"
+                />
               </template>
             </Button>
           </div>
@@ -602,33 +718,69 @@
       </div>
     </div>
   </div>
-
-  
-  <div v-else class="flex flex-1 flex-col items-center justify-center gap-3 text-xl font-medium text-gray-500">
+  <div
+    v-else
+    class="flex flex-1 flex-col items-center justify-center gap-3 text-xl font-medium text-gray-500"
+  >
     <component :is="emptyTextIcon" class="h-10 w-10" />
     <span>{{ __(emptyText) }}</span>
-    <Button v-if="title == 'Calls'" :label="__('Make a Call')" @click="makeCall(doc.data.mobile_no)" />
-    <Button v-else-if="title == 'Notes'" :label="__('Create Note')" @click="showNote()" />
-    <Button v-else-if="title == 'Emails'" :label="__('New Email')" @click="$refs.emailBox.show = true" />
-    <Button v-else-if="title == 'Tasks'" :label="__('Create Task')" @click="showTask()" />
-    <Button v-else-if="title == 'Prices'" :label="__('Create Price')" @click="showPrice()" />
-    <Button v-else-if="title == 'Variants'" :label="__('Create Variant')" @click="showVariant()" />
-
+    <Button
+      v-if="title == 'Calls'"
+      :label="__('Make a Call')"
+      @click="makeCall(doc.data.mobile_no)"
+    />
+    <Button
+      v-else-if="title == 'Notes'"
+      :label="__('Create Note')"
+      @click="showNote()"
+    />
+    <Button
+      v-else-if="title == 'Emails'"
+      :label="__('New Email')"
+      @click="$refs.emailBox.show = true"
+    />
+    <Button
+      v-else-if="title == 'Tasks'"
+      :label="__('Create Task')"
+      @click="showTask()"
+    />
   </div>
-  <CommunicationArea ref="emailBox" v-if="['Emails', 'Activity'].includes(title)" v-model="doc"
-    v-model:reload="reload_email" :doctype="doctype" @scroll="scroll" />
-  <WhatsAppBox ref="whatsappBox" v-if="title == 'WhatsApp'" v-model="doc" v-model:reply="replyMessage"
-    v-model:whatsapp="whatsappMessages" :doctype="doctype" @scroll="scroll" />
-  <NoteModal v-model="showNoteModal" v-model:reloadNotes="all_activities" :note="note" :doctype="doctype"
-    :doc="doc.data?.name" />
-  <TaskModal v-model="showTaskModal" v-model:reloadTasks="all_activities" :task="task" :doctype="doctype"
-    :doc="doc.data?.name" />
-  <PriceModal v-model="showPriceModal" v-model:reloadPrices="all_activities" :price="price" :doctype="doctype"
-    :doc="doc.data?.name" />
-  <WhatsappTemplateSelectorModal v-if="whatsappEnabled" v-model="showWhatsappTemplates"
-    @send="(t) => sendTemplate(t)" />
-
-
+  <CommunicationArea
+    ref="emailBox"
+    v-if="['Emails', 'Activity'].includes(title)"
+    v-model="doc"
+    v-model:reload="reload_email"
+    :doctype="doctype"
+    @scroll="scroll"
+  />
+  <WhatsAppBox
+    ref="whatsappBox"
+    v-if="title == 'WhatsApp'"
+    v-model="doc"
+    v-model:reply="replyMessage"
+    v-model:whatsapp="whatsappMessages"
+    :doctype="doctype"
+    @scroll="scroll"
+  />
+  <NoteModal
+    v-model="showNoteModal"
+    v-model:reloadNotes="all_activities"
+    :note="note"
+    :doctype="doctype"
+    :doc="doc.data?.name"
+  />
+  <TaskModal
+    v-model="showTaskModal"
+    v-model:reloadTasks="all_activities"
+    :task="task"
+    :doctype="doctype"
+    :doc="doc.data?.name"
+  />
+  <WhatsappTemplateSelectorModal
+    v-if="whatsappEnabled"
+    v-model="showWhatsappTemplates"
+    @send="(t) => sendTemplate(t)"
+  />
 </template>
 <script setup>
 import UserAvatar from '@/components/UserAvatar.vue'
@@ -660,10 +812,6 @@ import AttachmentItem from '@/components/AttachmentItem.vue'
 import CommunicationArea from '@/components/CommunicationArea.vue'
 import NoteModal from '@/components/Modals/NoteModal.vue'
 import TaskModal from '@/components/Modals/TaskModal.vue'
-import PriceModal from '@/components/Modals/PriceModal.vue'
-import ViewControls from '@/components/ViewControls.vue'
-import PricesListView from '@/components/ListViews/PricesListView.vue'
-// import PricesGridView from '@/components/ListViews/PricesGridView.vue'
 import WhatsappTemplateSelectorModal from '@/components/Modals/WhatsappTemplateSelectorModal.vue'
 import {
   timeAgo,
@@ -703,55 +851,6 @@ const { makeCall, $socket } = globalStore()
 const { getUser } = usersStore()
 const { getContact, getLeadContact } = contactsStore()
 
-const breadcrumbs = [{ label: __('Prices'), route: { name: 'Prices' } }]
-
-
-// prices data is loaded in the ViewControls component
-const prices = ref({})
-const loadMore = ref(1)
-const triggerResize = ref(1)
-const updatedPageCount = ref(20)
-const viewControls = ref(null)
-// const l_prices = ref({})
-
-
-
-const doc = defineModel()
-const l_prices = computed(() => {
-  return doc.value?.data.prices.map(item => ({ ...item }));
-});
-
-const item_code_to_filter = doc.value.data.name; // Replace with the actual item_code you want to filter by
-
-const rows = computed(() => {
-  if (!prices.value?.data?.data) return [];
-  
-  // Filter data based on item_code
-  const filteredData = prices.value?.data.data.filter(price => price.item_code === item_code_to_filter);
-
-  // Process the filtered data
-  return filteredData.map((price) => {
-    let _rows = {};
-    prices.value?.data.rows.forEach((row) => {
-      _rows[row] = price[row];
-
-      if (['modified', 'creation'].includes(row)) {
-        _rows[row] = {
-          label: dateFormat(price[row], dateTooltipFormat),
-          timeAgo: __(timeAgo(price[row])),
-        };
-      } else if (row == 'assigned_to') {
-        _rows[row] = {
-          label: price.assigned_to && getUser(price.assigned_to).full_name,
-          ...(price.assigned_to && getUser(price.assigned_to)),
-        };
-      }
-    });
-    return _rows;
-  });
-});
-
-
 const props = defineProps({
   title: {
     type: String,
@@ -763,7 +862,7 @@ const props = defineProps({
   },
 })
 
-// const doc = defineModel()
+const doc = defineModel()
 const reload = defineModel('reload')
 const tabIndex = defineModel('tabIndex')
 
@@ -774,7 +873,7 @@ const all_activities = createResource({
   params: { name: doc.value.data.name },
   cache: ['activity', doc.value.data.name],
   auto: true,
-  transform: ([versions, calls, notes, tasks,prices]) => {
+  transform: ([versions, calls, notes, tasks]) => {
     if (calls?.length) {
       calls.forEach((doc) => {
         doc.show_recording = false
@@ -809,11 +908,9 @@ const all_activities = createResource({
         }
       })
     }
-    
-    return { versions, calls, notes, tasks, prices }
+    return { versions, calls, notes, tasks }
   },
 })
-
 
 const showWhatsappTemplates = ref(false)
 
@@ -883,11 +980,6 @@ const defaultActions = computed(() => {
       label: __('New Task'),
       onClick: () => showTask(),
     },
-    // {
-    //   icon: h(TaskIcon, { class: 'h-4 w-4' }),
-    //   label: __('New Price'),
-    //   onClick: () => showPrice(),
-    // },
     {
       icon: h(WhatsAppIcon, { class: 'h-4 w-4' }),
       label: __('New WhatsApp Message'),
@@ -925,9 +1017,6 @@ const activities = computed(() => {
   } else if (props.title == 'Notes') {
     if (!all_activities.data?.notes) return []
     return sortByCreation(all_activities.data.notes)
-  } else if (props.title == 'Prices') {
-    if (!all_activities.data?.prices) return []
-    return sortByCreation(all_activities.data.prices)
   }
 
   activities.forEach((activity) => {
@@ -989,8 +1078,6 @@ const emptyText = computed(() => {
     text = 'No Tasks'
   } else if (props.title == 'WhatsApp') {
     text = 'No WhatsApp Messages'
-  } else if (props.title == 'Prices') {
-    text = 'No Prices'
   }
   return text
 })
@@ -1007,8 +1094,6 @@ const emptyTextIcon = computed(() => {
     icon = TaskIcon
   } else if (props.title == 'WhatsApp') {
     icon = WhatsAppIcon
-  }else if (props.title == 'Prices') {
-    icon = TaskIcon
   }
   return h(icon, { class: 'text-gray-500' })
 })
@@ -1066,7 +1151,6 @@ async function deleteNote(name) {
 const showTaskModal = ref(false)
 const task = ref({})
 
-
 function showTask(t) {
   task.value = t || {
     title: '',
@@ -1079,27 +1163,9 @@ function showTask(t) {
   showTaskModal.value = true
 }
 
-const showPriceModal = ref(false)
-const price = ref({})
-
-function showPrice(p) {
-  price.value = p || {
-    title: '',
-    price_list: '',
-  }
-  showPriceModal.value = true
-}
 async function deleteTask(name) {
   await call('frappe.client.delete', {
     doctype: 'CRM Task',
-    name,
-  })
-  all_activities.reload()
-}
-
-async function deletePrice(name) {
-  await call('frappe.client.delete', {
-    doctype: 'Item Price',
     name,
   })
   all_activities.reload()
@@ -1109,17 +1175,6 @@ function updateTaskStatus(status, task) {
   call('frappe.client.set_value', {
     doctype: 'CRM Task',
     name: task.name,
-    fieldname: 'status',
-    value: status,
-  }).then(() => {
-    all_activities.reload()
-  })
-}
-
-function updatePriceStatus(status, price) {
-  call('frappe.client.set_value', {
-    doctype: 'Item Price',
-    name: price.name,
     fieldname: 'status',
     value: status,
   }).then(() => {
@@ -1224,12 +1279,14 @@ nextTick(() => {
 .email-content {
   word-break: break-word;
 }
-
-:deep(.email-content :is(:where(table):not(:where([class~='not-prose'], [class~='not-prose'] *)))) {
+:deep(.email-content
+    :is(:where(table):not(:where([class~='not-prose'], [class~='not-prose']
+          *)))) {
   table-layout: auto;
 }
 
-:deep(.email-content :where(table):not(:where([class~='not-prose'], [class~='not-prose'] *))) {
+:deep(.email-content
+    :where(table):not(:where([class~='not-prose'], [class~='not-prose'] *))) {
   width: unset;
   table-layout: auto;
   text-align: unset;
@@ -1241,40 +1298,54 @@ nextTick(() => {
 
 /* tr */
 
-:deep(.email-content :where(tbody tr):not(:where([class~='not-prose'], [class~='not-prose'] *))) {
+:deep(.email-content
+    :where(tbody tr):not(:where([class~='not-prose'], [class~='not-prose']
+        *))) {
   border-bottom-width: 0;
   border-bottom-color: transparent;
 }
 
 /* td */
 
-:deep(.email-content :is(:where(td):not(:where([class~='not-prose'], [class~='not-prose'] *)))) {
+:deep(.email-content
+    :is(:where(td):not(:where([class~='not-prose'], [class~='not-prose'] *)))) {
   position: unset;
   border-width: 0;
   border-color: transparent;
   padding: 0;
 }
 
-:deep(.email-content :where(tbody td):not(:where([class~='not-prose'], [class~='not-prose'] *))) {
+:deep(.email-content
+    :where(tbody td):not(:where([class~='not-prose'], [class~='not-prose']
+        *))) {
   vertical-align: revert;
 }
 
 /* image */
-:deep(.email-content :is(:where(img):not(:where([class~='not-prose'], [class~='not-prose'] *)))) {
+:deep(.email-content
+    :is(:where(img):not(:where([class~='not-prose'], [class~='not-prose']
+          *)))) {
   border-width: 0;
 }
 
-:deep(.email-content :where(img):not(:where([class~='not-prose'], [class~='not-prose'] *))) {
+:deep(.email-content
+    :where(img):not(:where([class~='not-prose'], [class~='not-prose'] *))) {
   margin: 0;
 }
 
 /* before & after */
 
-:deep(.email-content :where(blockquote p:first-of-type):not(:where([class~='not-prose'], [class~='not-prose'] *))::before) {
+:deep(.email-content
+    :where(blockquote
+      p:first-of-type):not(:where([class~='not-prose'], [class~='not-prose']
+        *))::before) {
   content: none;
 }
 
-:deep(.email-content :where(blockquote p:last-of-type):not(:where([class~='not-prose'], [class~='not-prose'] *))::after) {
+:deep(.email-content
+    :where(blockquote
+      p:last-of-type):not(:where([class~='not-prose'], [class~='not-prose']
+        *))::after) {
   content: none;
 }
 </style>
