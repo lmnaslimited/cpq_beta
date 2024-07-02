@@ -157,7 +157,7 @@ const tabs = [
   { name: 'Tasks', label: __('Tasks'), icon: TaskIcon },
   { name: 'Notes', label: __('Notes'), icon: NoteIcon },
   { name: 'Prices', label: __('Prices'), icon: TaskIcon },
-  // { name: 'Variants', label: __('Variants'), icon: TaskIcon },
+  { name: 'Variants', label: __('Variants'), icon: TaskIcon },
   
 ]
 

@@ -105,6 +105,8 @@
       </div>
     </div>
 
+    
+
     <div v-else-if="title == 'Tasks'" class="activity px-10 pb-5">
       <div v-for="(task, i) in activities">
         <div class="flex cursor-pointer gap-6 rounded p-2.5 duration-300 ease-in-out hover:bg-gray-50"
@@ -178,8 +180,73 @@
       </div>
     </div>
 
-    
+    <!-- Prices -->
 
+
+    <div v-else-if="title == 'Prices'" class="activity px-10 pb-5">
+    <ViewControls
+      ref="viewControls"
+      v-model="prices"
+      v-model:loadMore="loadMore"
+      v-model:resizeColumn="triggerResize"
+      v-model:updatedPageCount="updatedPageCount"
+      doctype="Item Price"
+    />
+    <PricesListView
+        ref="pricesListView"
+        v-if="l_prices && rows.length"
+        v-model="l_prices"
+        v-model:list="prices" 
+        :rows="rows"
+        :columns="prices.data.columns"
+        :options="{
+          showTooltip: false,
+          resizeColumn: true,
+          rowCount: rows.length,
+          totalCount: rows.length,
+        }"
+        @loadMore="() => loadMore++"
+        @columnWidthUpdated="() => triggerResize++"
+        @updatePageCount="(count) => (updatedPageCount = count)"
+        @showPrice="showPrice"
+        @applyFilter="(data) => viewControls.applyFilter(data)"
+    />
+    
+  </div>
+
+  <!-- Variant Tab  -->
+
+
+  <!-- <div v-if="title == 'Variants'" class="activity px-10 pb-5">
+    <ViewControls
+      ref="viewControls"
+      v-model="prices"
+      v-model:loadMore="loadMore"
+      v-model:resizeColumn="triggerResize"
+      v-model:updatedPageCount="updatedPageCount"
+      doctype="Item Price"
+    />
+    <PricesListView
+        ref="pricesListView"
+        v-if="l_prices && rows.length"
+        v-model="l_prices"
+        v-model:list="prices" 
+        :rows="rows"
+        :columns="prices.data.columns"
+        :options="{
+          showTooltip: false,
+          resizeColumn: true,
+          rowCount: rows.length,
+          totalCount: rows.length,
+        }"
+        @loadMore="() => loadMore++"
+        @columnWidthUpdated="() => triggerResize++"
+        @updatePageCount="(count) => (updatedPageCount = count)"
+        @showPrice="showPrice"
+        @applyFilter="(data) => viewControls.applyFilter(data)"
+    />
+  
+  </div> -->
 
 
     <!-- Calls -->
@@ -536,69 +603,7 @@
     </div>
   </div>
 
-  <!--this is the part where the issue is coming from-->
-  <div v-if="title == 'Prices'" class="activity px-10 pb-5">
-    <ViewControls
-      ref="viewControls"
-      v-model="prices"
-      v-model:loadMore="loadMore"
-      v-model:resizeColumn="triggerResize"
-      v-model:updatedPageCount="updatedPageCount"
-      doctype="Item Price"
-    />
-    <PricesListView
-        ref="pricesListView"
-        v-if="l_prices && rows.length"
-        v-model="l_prices"
-        v-model:list="prices" 
-        :rows="rows"
-        :columns="prices.data.columns"
-        :options="{
-          showTooltip: false,
-          resizeColumn: true,
-          rowCount: rows.length,
-          totalCount: rows.length,
-        }"
-        @loadMore="() => loadMore++"
-        @columnWidthUpdated="() => triggerResize++"
-        @updatePageCount="(count) => (updatedPageCount = count)"
-        @showPrice="showPrice"
-        @applyFilter="(data) => viewControls.applyFilter(data)"
-    />
   
-  </div>
-
-  <!-- Variant Tab  -->
-  <!-- <div v-if="title == 'Variants'" class="activity px-10 pb-5">
-    <ViewControls
-      ref="viewControls"
-      v-model="prices"
-      v-model:loadMore="loadMore"
-      v-model:resizeColumn="triggerResize"
-      v-model:updatedPageCount="updatedPageCount"
-      doctype="Item Price"
-    />
-    <PricesListView
-        ref="pricesListView"
-        v-if="l_prices && rows.length"
-        v-model="l_prices"
-        v-model:list="prices" 
-        :rows="rows"
-        :columns="prices.data.columns"
-        :options="{
-          showTooltip: false,
-          resizeColumn: true,
-          rowCount: rows.length,
-          totalCount: rows.length,
-        }"
-        @loadMore="() => loadMore++"
-        @columnWidthUpdated="() => triggerResize++"
-        @updatePageCount="(count) => (updatedPageCount = count)"
-        @showPrice="showPrice"
-        @applyFilter="(data) => viewControls.applyFilter(data)"
-    />
-  
-  </div> -->
   <div v-else class="flex flex-1 flex-col items-center justify-center gap-3 text-xl font-medium text-gray-500">
     <component :is="emptyTextIcon" class="h-10 w-10" />
     <span>{{ __(emptyText) }}</span>
@@ -607,6 +612,8 @@
     <Button v-else-if="title == 'Emails'" :label="__('New Email')" @click="$refs.emailBox.show = true" />
     <Button v-else-if="title == 'Tasks'" :label="__('Create Task')" @click="showTask()" />
     <Button v-else-if="title == 'Prices'" :label="__('Create Price')" @click="showPrice()" />
+    <Button v-else-if="title == 'Variants'" :label="__('Create Variant')" @click="showVariant()" />
+
   </div>
   <CommunicationArea ref="emailBox" v-if="['Emails', 'Activity'].includes(title)" v-model="doc"
     v-model:reload="reload_email" :doctype="doctype" @scroll="scroll" />
@@ -621,35 +628,6 @@
   <WhatsappTemplateSelectorModal v-if="whatsappEnabled" v-model="showWhatsappTemplates"
     @send="(t) => sendTemplate(t)" />
 
-    <!-- <div v-if="title == 'Prices'" class="activity px-10 pb-5">
-    <ViewControls
-      ref="viewControls"
-      v-model="prices"
-      v-model:loadMore="loadMore"
-      v-model:resizeColumn="triggerResize"
-      v-model:updatedPageCount="updatedPageCount"
-      doctype="Item Price"
-    />
-    <PricesListView
-        ref="pricesListView"
-        v-if="l_prices && rows.length"
-        v-model="l_prices"
-        v-model:list="prices" 
-        :rows="rows"
-        :columns="prices.data.columns"
-        :options="{
-          showTooltip: false,
-          resizeColumn: true,
-          rowCount: rows.length,
-          totalCount: rows.length,
-        }"
-        @loadMore="() => loadMore++"
-        @columnWidthUpdated="() => triggerResize++"
-        @updatePageCount="(count) => (updatedPageCount = count)"
-        @showPrice="showPrice"
-        @applyFilter="(data) => viewControls.applyFilter(data)"
-    />
-  </div> -->
 
 </template>
 <script setup>
@@ -685,6 +663,7 @@ import TaskModal from '@/components/Modals/TaskModal.vue'
 import PriceModal from '@/components/Modals/PriceModal.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import PricesListView from '@/components/ListViews/PricesListView.vue'
+// import PricesGridView from '@/components/ListViews/PricesGridView.vue'
 import WhatsappTemplateSelectorModal from '@/components/Modals/WhatsappTemplateSelectorModal.vue'
 import {
   timeAgo,
@@ -724,45 +703,6 @@ const { makeCall, $socket } = globalStore()
 const { getUser } = usersStore()
 const { getContact, getLeadContact } = contactsStore()
 
-
-
-// const itemsListView = ref(null)
-// // const showItemModal = ref(false)
-
-// // items data is loaded in the ViewControls component
-// const items = ref({})
-// const loadMore = ref(1)
-// const triggerResize = ref(1)
-// const updatedPageCount = ref(20)
-// const viewControls = ref(null)
-
-// // Rows
-// const rows = computed(() => {
-//    console.log("items",items)
-//   if (!items.value?.data?.data) return []
-//   return items.value.data.data.map((item) => {
-//     //console.log(items.value.data)
-//     let _rows = {}
-//     items.value.data.rows.forEach((row) => {
-//       // /console.log(row)
-//       _rows[row] = item[row]
-//       // // console.log(_rows)
-//       // if (row == 'name') {
-//       //   _rows[row] = {
-//       //     label: item.name
-//       //   }
-//       // } else if (row == 'modified') {
-//       //   _rows[row] = {
-         
-//       //   }
-//       // } 
-//     })
-//     //console.log(_rows)
-//     return _rows
-//    })
-  
-//  })
-
 const breadcrumbs = [{ label: __('Prices'), route: { name: 'Prices' } }]
 
 
@@ -772,10 +712,14 @@ const loadMore = ref(1)
 const triggerResize = ref(1)
 const updatedPageCount = ref(20)
 const viewControls = ref(null)
+// const l_prices = ref({})
 
 
 
 const doc = defineModel()
+const l_prices = computed(() => {
+  return doc.value?.data.prices.map(item => ({ ...item }));
+});
 
 const item_code_to_filter = doc.value.data.name; // Replace with the actual item_code you want to filter by
 
@@ -806,13 +750,6 @@ const rows = computed(() => {
     return _rows;
   });
 });
-// const columns = [
-// { label: 'Price List', type: 'Data', key: 'price_list', width: '12rem' },
-// { label: 'Price List Rate', type: 'Data', key: 'price_list_rate', width: '12rem' },
-// { label: 'Currency', type: 'Currency', key: 'currency', width: '16rem' },
-// ]
-
-
 
 
 const props = defineProps({
@@ -837,7 +774,7 @@ const all_activities = createResource({
   params: { name: doc.value.data.name },
   cache: ['activity', doc.value.data.name],
   auto: true,
-  transform: ([versions, calls, notes, tasks]) => {
+  transform: ([versions, calls, notes, tasks,prices]) => {
     if (calls?.length) {
       calls.forEach((doc) => {
         doc.show_recording = false
@@ -873,10 +810,10 @@ const all_activities = createResource({
       })
     }
     
-    return { versions, calls, notes, tasks }
+    return { versions, calls, notes, tasks, prices }
   },
 })
-const l_prices = doc.value.data.prices.map(item => ({ ...item }));
+
 
 const showWhatsappTemplates = ref(false)
 
@@ -946,11 +883,11 @@ const defaultActions = computed(() => {
       label: __('New Task'),
       onClick: () => showTask(),
     },
-    {
-      icon: h(TaskIcon, { class: 'h-4 w-4' }),
-      label: __('New Price'),
-      onClick: () => showPrice(),
-    },
+    // {
+    //   icon: h(TaskIcon, { class: 'h-4 w-4' }),
+    //   label: __('New Price'),
+    //   onClick: () => showPrice(),
+    // },
     {
       icon: h(WhatsAppIcon, { class: 'h-4 w-4' }),
       label: __('New WhatsApp Message'),

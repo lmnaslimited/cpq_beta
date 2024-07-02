@@ -63,7 +63,7 @@ import CustomActions from '@/components/CustomActions.vue'
 import LayoutHeader from '@/components/LayoutHeader.vue'
 import ViewControls from '@/components/ViewControls.vue'
 import ItemsListView from '@/components/ListViews/ItemsListView.vue'
-// import ItemModal from '@/components/Modals/ItemModal.vue'
+import ItemModal from '@/components/Modals/ItemModal.vue'
 import { usersStore } from '@/stores/users'
 import { organizationsStore } from '@/stores/organizations'
 
