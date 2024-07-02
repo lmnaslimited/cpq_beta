@@ -114,7 +114,7 @@
     ]
   })
   
-  const createLead = createResource({
+  const createItem = createResource({
     url: 'frappe.client.insert',
     makeParams(values) {
       return {
@@ -135,7 +135,7 @@
 //   })
   
   function createNewItem() {
-    createLead.submit(item, {
+    createItem.submit(item, {
       validate() {
         error.value = null
         // if (!item.first_name) {
