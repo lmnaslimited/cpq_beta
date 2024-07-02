@@ -141,6 +141,11 @@ const links = [
     to: 'Designs',
   },
   {
+    label: 'Items',
+    icon: DealsIcon,
+    to: 'Items',
+  },
+  {
     label: 'Contacts',
     icon: ContactsIcon,
     to: 'Contacts',
@@ -219,6 +224,8 @@ function getIcon(routeName) {
     case 'Deals':
       return DealsIcon
     case 'Designs':
+      return DealsIcon
+    case 'Items':
       return DealsIcon
     case 'Contacts':
       return ContactsIcon

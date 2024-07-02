@@ -87,6 +87,16 @@
             </p>
             <span v-if="rangeErrors[field.name]" class="text-red-500">{{ rangeErrors[field.name] }}</span>
           </div>
+          <div v-else-if="field.type === 'textbox'">
+            <FormControl
+              :type="'textarea'"
+              size="sm"
+              variant="subtle"
+              :placeholder="__(field.placeholder)"
+              :disabled="false"
+              v-model="inputValue"
+            />
+          </div>
           <div v-else-if="field.type === 'dropdown'">
             <NestedPopover>
               <template #target="{ open }">
@@ -155,7 +165,7 @@ import IndicatorIcon from '@/components/Icons/IndicatorIcon.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import Link from '@/components/Controls/Link.vue'
 import { usersStore } from '@/stores/users'
-import { Tooltip } from 'frappe-ui'
+import { Tooltip, TextEditor } from 'frappe-ui'
 import { reactive, ref, watch, onMounted } from 'vue'
 
 const { getUser } = usersStore()
