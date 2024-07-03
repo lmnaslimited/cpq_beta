@@ -221,39 +221,37 @@
       />
       
     </div>
-  
+
     <!-- Variant Tab  -->
   
   
-    <!-- <div v-if="title == 'Variants'" class="activity px-10 pb-5">
+     <!-- Conditionally render the Variants tab for template items -->
+    <!-- <div v-if="title === 'Variants' && isTemplate" class="activity px-10 pb-5">
       <ViewControls
         ref="viewControls"
-        v-model="prices"
+        v-model="variants"
         v-model:loadMore="loadMore"
         v-model:resizeColumn="triggerResize"
         v-model:updatedPageCount="updatedPageCount"
-        doctype="Item Price"
+        doctype="Item"
       />
-      <PricesListView
-          ref="pricesListView"
-          v-if="l_prices && rows.length"
-          v-model="l_prices"
-          v-model:list="prices" 
-          :rows="rows"
-          :columns="prices.data.columns"
-          :options="{
-            showTooltip: false,
-            resizeColumn: true,
-            rowCount: rows.length,
-            totalCount: rows.length,
-          }"
-          @loadMore="() => loadMore++"
-          @columnWidthUpdated="() => triggerResize++"
-          @updatePageCount="(count) => (updatedPageCount = count)"
-          @showPrice="showPrice"
-          @applyFilter="(data) => viewControls.applyFilter(data)"
+      <VariantsListView
+        ref="variantsListView"
+        v-if="variants && variants.length"
+        v-model:list="variants"
+        :rows="variants"
+        :columns="variantColumns"
+        :options="{
+          showTooltip: false,
+          resizeColumn: true,
+          rowCount: variants.length,
+          totalCount: variants.length,
+        }"
+        @loadMore="() => loadMore++"
+        @columnWidthUpdated="() => triggerResize++"
+        @updatePageCount="(count) => (updatedPageCount = count)"
+        @applyFilter="(data) => viewControls.applyFilter(data)"
       />
-    
     </div> -->
   
   
@@ -671,7 +669,7 @@
   import PriceModal from '@/components/Modals/PriceModal.vue'
   import ViewControls from '@/components/ViewControls.vue'
   import PricesListView from '@/components/ListViews/PricesListView.vue'
-  // import PricesGridView from '@/components/ListViews/PricesGridView.vue'
+  import VariantsListView from '@/components/ListViews/VariantsListView.vue'
   import WhatsappTemplateSelectorModal from '@/components/Modals/WhatsappTemplateSelectorModal.vue'
   import {
     timeAgo,
@@ -722,6 +720,7 @@
   
   // prices data is loaded in the ViewControls component
   const prices = ref({})
+  const items = ref({})
   const loadMore = ref(1)
   const triggerResize = ref(1)
   const updatedPageCount = ref(20)
@@ -1095,6 +1094,8 @@
   
   const showPriceModal = ref(false)
   const price = ref({})
+  const variants = ref({})
+
   
   function showPrice(p) {
     price.value = p || {

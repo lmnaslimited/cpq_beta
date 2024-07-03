@@ -1,90 +1,84 @@
 {
-    "actions": [],
-    "allow_rename": 1,
-    "autoname": "naming_series:",
-    "creation": "2024-04-25 14:48:06.220114",
-    "doctype": "DocType",
-    "engine": "InnoDB",
-    "field_order": [
-     "naming_series",
-     "design_type",
-     "design_owner",
-     "status",
-     "image",
-     "item_variant_attribute",
-     "others_tab",
-     "color"
-    ],
-    "fields": [
-     {
-      "fieldname": "others_tab",
-      "fieldtype": "Tab Break",
-      "label": "Others"
-     },
-     {
-      "fieldname": "color",
-      "fieldtype": "Data",
-      "label": "Color"
-     },
-     {
-      "fieldname": "status",
-      "fieldtype": "Select",
-      "label": "Status",
-      "options": "Draft\nIn Review\nCompleted"
-     },
-     {
-      "fieldname": "image",
-      "fieldtype": "Attach Image",
-      "label": "Image"
-     },
-     {
-      "fieldname": "design_type",
-      "fieldtype": "Data",
-      "label": "Design Type"
-     },
-     {
-      "fieldname": "design_owner",
-      "fieldtype": "Data",
-      "label": "Design Owner"
-     },
-     {
-      "default": "design_type.YYYY.####",
-      "fieldname": "naming_series",
-      "fieldtype": "Select",
-      "hidden": 1,
-      "label": "Series",
-      "options": "design_type.YYYY.####"
-     },
-     {
-      "fieldname": "item_variant_attribute",
-      "fieldtype": "Table",
-      "label": "Item Variant Attribute",
-      "options": "Item Variant Attribute"
-     }
-    ],
-    "index_web_pages_for_search": 1,
-    "links": [],
-    "modified": "2024-05-21 19:22:35.881321",
-    "modified_by": "Administrator",
-    "module": "FCRM",
-    "name": "Design",
-    "naming_rule": "By \"Naming Series\" field",
-    "owner": "Administrator",
-    "permissions": [
-     {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "System Manager",
-      "share": 1,
-      "write": 1
-     }
-    ],
-    "sort_field": "modified",
-    "sort_order": "DESC",
-    "states": []
-   }
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2024-04-25 14:48:06.220114",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "naming_series",
+  "design_type",
+  "design_owner",
+  "status",
+  "item_variant_attribute",
+  "others_tab",
+  "color"
+ ],
+ "fields": [
+  {
+   "fieldname": "others_tab",
+   "fieldtype": "Tab Break",
+   "label": "Others"
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Data",
+   "label": "Color"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Draft\nIn Review\nCompleted"
+  },
+  {
+   "fieldname": "design_type",
+   "fieldtype": "Data",
+   "label": "Design Type"
+  },
+  {
+   "fieldname": "design_owner",
+   "fieldtype": "Data",
+   "label": "Design Owner"
+  },
+  {
+   "default": "design_type.YYYY.####",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Series",
+   "options": "design_type.YYYY.####"
+  },
+  {
+   "fieldname": "item_variant_attribute",
+   "fieldtype": "Table",
+   "label": "Item Variant Attribute",
+   "options": "Item Variant Attribute"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-02 11:25:50.952856",
+ "modified_by": "Administrator",
+ "module": "FCRM",
+ "name": "Design",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

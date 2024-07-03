@@ -120,6 +120,9 @@ before_uninstall = "crm.uninstall.before_uninstall"
 override_doctype_class = {
 	"Contact": "crm.overrides.contact.CustomContact",
 	"Email Template": "crm.overrides.email_template.CustomEmailTemplate",
+    'Item': "crm.overrides.item.CustomItem",
+    "Quotation": "crm.overrides.quotation.CustomQuotation",
+    'Item Price': "crm.overrides.item_price.CustomItemPrice",
 }
 
 # Document Events
@@ -231,3 +234,12 @@ doc_events = {
 # auth_hooks = [
 #	"crm.auth.validate"
 # ]
+
+
+#this is to get the custom fields of quotation
+fixtures = [
+    {
+        "dt": "Custom Field",
+       
+    }
+]
