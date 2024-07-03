@@ -57,6 +57,18 @@ const routes = [
     props: true,
   },
   {
+    path: '/quotations',
+    name: 'Quotations',
+    component: () => import('@/pages/Quotations.vue'),
+    meta: { scrollPos: { top: 0, left: 0 } },
+  },
+  {
+    path: '/quotations/:quotationId',
+    name: 'Quotation',
+    component: () => import('@/pages/Quotation.vue'),
+    props: true,
+  },
+  {
     path: '/notes',
     name: 'Notes',
     component: () => import('@/pages/Notes.vue'),

@@ -146,6 +146,11 @@ const links = [
     to: 'Items',
   },
   {
+    label: 'Quotations',
+    icon: DealsIcon,
+    to: 'Quotations',
+  },
+  {
     label: 'Contacts',
     icon: ContactsIcon,
     to: 'Contacts',

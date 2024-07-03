@@ -30,12 +30,12 @@
       </template>
       <span>{{ __('New Note') }}</span>
     </Button>
-<Button v-if="title == 'Notes'" variant="solid" @click="logNotesContent()">
+<!-- <Button v-if="title == 'Notes'" variant="solid" @click="logNotesContent()">
   <template #prefix>
     <FeatherIcon name="plus" class="h-4 w-4" /> 
   </template>
   <span>{{ __('Recommend Item') }}</span>
-</Button>
+</Button> -->
 </div>
     <Button v-else-if="title == 'Tasks'" variant="solid" @click="showTask()">
       <template #prefix>
@@ -789,7 +789,7 @@
     v-model="showWhatsappTemplates"
     @send="(t) => sendTemplate(t)"
   />
-   <ItemRecommodationModal :attributes="extractedAttributes" v-model:show="showItemRecommodationModal" @close="showItemRecommodationModal = false" />
+   <!-- <ItemRecommodationModal :attributes="extractedAttributes" v-model:show="showItemRecommodationModal" @close="showItemRecommodationModal = false" /> -->
 </template>
 <script setup>
 import UserAvatar from '@/components/UserAvatar.vue'
@@ -855,11 +855,11 @@ import {
   onBeforeUnmount,
 } from 'vue'
 import { useRoute } from 'vue-router'
-import ItemRecommodationModal from '@/components/Modals/ItemRecommodationModal.vue'
+// import ItemRecommodationModal from '@/components/Modals/ItemRecommodationModal.vue'
 
-// Reactive variables
-const showItemRecommodationModal = ref(false)
-const extractedAttributes = ref(null)
+// // Reactive variables
+// const showItemRecommodationModal = ref(false)
+// const extractedAttributes = ref(null)
 
 const { makeCall, $socket } = globalStore()
 const { getUser } = usersStore()
@@ -1273,53 +1273,53 @@ nextTick(() => {
   scroll(hash)
 })
 
-// Function to log notes content and fetch attributes
-async function logNotesContent() {
-  const notesContent = computed(() => {
-    if (all_activities.data?.notes) {
-      return all_activities.data.notes.map(note => {
-        // Remove HTML tags using a regular expression
-        const contentWithoutTags = note.content.replace(/<[^>]*>?/gm, '')
-        return contentWithoutTags
-      })
-    } else {
-      return []
-    }
-  })
+// // Function to log notes content and fetch attributes
+// async function logNotesContent() {
+//   const notesContent = computed(() => {
+//     if (all_activities.data?.notes) {
+//       return all_activities.data.notes.map(note => {
+//         // Remove HTML tags using a regular expression
+//         const contentWithoutTags = note.content.replace(/<[^>]*>?/gm, '')
+//         return contentWithoutTags
+//       })
+//     } else {
+//       return []
+//     }
+//   })
 
-  // Check if notesContent.value is available
-  if (notesContent.value.length === 0) {
-    console.warn("No notes content available.")
-    return
-  }
+//   // Check if notesContent.value is available
+//   if (notesContent.value.length === 0) {
+//     console.warn("No notes content available.")
+//     return
+//   }
   
-  // Fetch attributes from the server
-  try {
-    const response = await call("crm.api.recom.get_items_with_attributes_from_content", {
-      content: notesContent.value
-    })
-    extractedAttributes.value = response
-    //console.log("Extracted Attributes:", response);
+//   // Fetch attributes from the server
+//   try {
+//     const response = await call("crm.api.recom.get_items_with_attributes_from_content", {
+//       content: notesContent.value
+//     })
+//     extractedAttributes.value = response
+//     //console.log("Extracted Attributes:", response);
     
-    // Show the ItemRecommodation modal
-    showItemRecommodationModal.value = true
-  } catch (error) {
-    console.error("Error fetching attributes:", error);
-  }
-}
+//     // Show the ItemRecommodation modal
+//     showItemRecommodationModal.value = true
+//   } catch (error) {
+//     console.error("Error fetching attributes:", error);
+//   }
+// }
 
-//for speech to text ai integration
-const voiceRecord = computed(() => {
-    if (all_activities.data?.calls) {
-      return all_activities.data.calls.map(call => {
+// //for speech to text ai integration
+// const voiceRecord = computed(() => {
+//     if (all_activities.data?.calls) {
+//       return all_activities.data.calls.map(call => {
         
-        return call.recording_url
-      })
-    } else {
-      return []
-    }
-  })
-//console.log(voiceRecord.value)
+//         return call.recording_url
+//       })
+//     } else {
+//       return []
+//     }
+//   })
+// //console.log(voiceRecord.value)
 </script>
 
 <style scoped>

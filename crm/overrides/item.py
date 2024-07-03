@@ -1,24 +1,28 @@
-# Copyright (c) 2024, Frappe Technologies Pvt. Ltd. and contributors
-# For license information, please see license.txt
-import json
-import frappe
+# import frappe
 from frappe import _
-from frappe.model.document import Document
+from erpnext.stock.doctype.item.item import Item
 
-class Item(Document):
-    @staticmethod
-    def default_list_data():
-        columns = [
+
+class CustomItem(Item):
+	@staticmethod
+	def default_list_data():
+		columns = [
             {
                 'label': 'Name',
                 'type': 'Data',
                 'key': 'item_name',
-                'width': '12rem',
+                'width': '16rem',
             },
             {
                 'label': 'Item Code',
                 'type': 'Data',
                 'key': 'item_code',
+                'width': '16rem',
+            },
+			{
+                'label': 'Status',
+                'type': 'Data',
+                'key': 'status',
                 'width': '12rem',
             },
             {
@@ -39,10 +43,10 @@ class Item(Document):
                 'label': 'Last Modified',
                 'type': 'Datetime',
                 'key': 'modified',
-                'width': '8rem',
+                'width': '20rem',
             },
         ]
-        rows = [
+		rows = [
             "name",
             "item_name",
             "item_code",
@@ -50,4 +54,4 @@ class Item(Document):
             "item_group",
             "modified",
         ]
-        return {'columns': columns, 'rows': rows}
+		return {'columns': columns, 'rows': rows}
