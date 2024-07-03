@@ -45,6 +45,18 @@ const routes = [
     props: true,
   },
   {
+    path: '/items',
+    name: 'Items',
+    component: () => import('@/pages/Items.vue'),
+    meta: { scrollPos: { top: 0, left: 0 } },
+  },
+  {
+    path: '/items/:itemId',
+    name: 'Item',
+    component: () => import('@/pages/Item.vue'),
+    props: true,
+  },
+  {
     path: '/notes',
     name: 'Notes',
     component: () => import('@/pages/Notes.vue'),
