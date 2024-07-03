@@ -94,7 +94,7 @@ import CameraIcon from '@/components/Icons/CameraIcon.vue'
 import LinkIcon from '@/components/Icons/LinkIcon.vue'
 import OrganizationsIcon from '@/components/Icons/OrganizationsIcon.vue'
 import ContactsIcon from '@/components/Icons/ContactsIcon.vue'
-import Activities from '@/components/Activities.vue'
+import Activities from '@/components/ActivitiesCpq.vue'
 import AssignmentModal from '@/components/Modals/AssignmentModal.vue'
 import MultipleAvatar from '@/components/MultipleAvatar.vue'
 import Section from '@/components/Section.vue'
@@ -157,7 +157,6 @@ const tabs = [
   { name: 'Tasks', label: __('Tasks'), icon: TaskIcon },
   { name: 'Notes', label: __('Notes'), icon: NoteIcon },
   { name: 'Prices', label: __('Prices'), icon: TaskIcon },
-  // { name: 'Variants', label: __('Variants'), icon: TaskIcon },
   
 ]
 

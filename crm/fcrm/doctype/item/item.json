@@ -17,6 +17,7 @@
      "item_name",
      "item_group",
      "stock_uom",
+     "carbon_reduction",
      "column_break0",
      "disabled",
      "allow_alternative_item",
@@ -884,6 +885,7 @@
       "fieldtype": "Section Break",
       "label": "Deferred Accounting"
      }
+     
     ],
     "icon": "fa fa-tag",
     "idx": 2,
@@ -891,7 +893,7 @@
     "index_web_pages_for_search": 1,
     "links": [],
     "make_attachments_public": 1,
-    "modified": "2024-04-30 13:46:39.098753",
+    "modified": "2024-05-31 17:07:30.930325",
     "modified_by": "Administrator",
     "module": "Stock",
     "name": "Item",
@@ -965,4 +967,3 @@
     "title_field": "item_name",
     "track_changes": 1
    }
-   

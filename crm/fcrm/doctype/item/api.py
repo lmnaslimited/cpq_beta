@@ -55,6 +55,12 @@ def get_item(name):
         fields=['*']
     )
 
+    # Fetch variants if the item is a template
+    variants = []
+    if item.get('has_variants') and not item.get('variant_of'):
+        variants_query = frappe.qb.from_(Item).select("*").where(Item.variant_of == name)
+        variants = variants_query.run(as_dict=True)
+
     # Add additional details to the item
     item["doctype_fields"], item["all_fields"] = get_doctype_fields("Item", name)
     item["doctype"] = "Item"
@@ -62,6 +68,7 @@ def get_item(name):
     item["_assign"] = get_assigned_users("Item", item["name"])
     item["prices"] = prices
     item["variant_attributes"] = variant_attributes
+    item["variants"] = variants
 
     # Log the response for debugging
     frappe.logger().info(f"get_item response: {item}")

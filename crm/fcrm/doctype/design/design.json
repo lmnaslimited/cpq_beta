@@ -10,7 +10,6 @@
   "design_type",
   "design_owner",
   "status",
-  "image",
   "item_variant_attribute",
   "others_tab",
   "color"
@@ -31,11 +30,6 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "Draft\nIn Review\nCompleted"
-  },
-  {
-   "fieldname": "image",
-   "fieldtype": "Attach Image",
-   "label": "Image"
   },
   {
    "fieldname": "design_type",
@@ -64,7 +58,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-05-21 19:22:35.881321",
+ "modified": "2024-07-02 11:25:50.952856",
  "modified_by": "Administrator",
  "module": "FCRM",
  "name": "Design",

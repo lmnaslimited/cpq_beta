@@ -55,6 +55,7 @@
     </div>
   </div>
   <DesignModal v-model="showDesignModal" />
+
 </template>
 
 <script setup>

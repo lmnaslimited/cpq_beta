@@ -59,7 +59,7 @@ def get_items_with_attributes(search_attributes):
     for attribute, value in search_attributes.items():
         subquery = """
             SELECT parent AS name
-            FROM `tabItem Variant Attribute`
+            FROM tabItem Variant Attribute
             WHERE attribute = %s AND attribute_value = %s
         """
         subqueries.append(subquery)

@@ -103,10 +103,13 @@ import EmailIcon from '@/components/Icons/EmailIcon.vue'
 import PinIcon from '@/components/Icons/PinIcon.vue'
 import UserDropdown from '@/components/UserDropdown.vue'
 import LeadsIcon from '@/components/Icons/LeadsIcon.vue'
+import DesignIcon from '@/components/Icons/DesignIcon.vue'
 import DealsIcon from '@/components/Icons/DealsIcon.vue'
+import ItemIcon from '@/components/Icons/ItemIcon.vue'
 import ContactsIcon from '@/components/Icons/ContactsIcon.vue'
 import OrganizationsIcon from '@/components/Icons/OrganizationsIcon.vue'
 import NoteIcon from '@/components/Icons/NoteIcon.vue'
+import QuotationsIcon from '@/components/Icons/QuotationsIcon.vue'
 import TaskIcon from '@/components/Icons/TaskIcon.vue'
 import PhoneIcon from '@/components/Icons/PhoneIcon.vue'
 import CollapseSidebar from '@/components/Icons/CollapseSidebar.vue'
@@ -137,19 +140,19 @@ const links = [
   },
   {
     label: 'Designs',
-    icon: DealsIcon,
+    icon: DesignIcon,
     to: 'Designs',
   },
   //Added for Items Menu in the Side bar. Used DealsIcon for it 
   {
     label: 'Items',
-    icon: DealsIcon,
+    icon: ItemIcon,
     to: 'Items',
   },
   //Added For Offers Menu
   {
     label: 'Quotations',
-    icon: DealsIcon,
+    icon: QuotationsIcon,
     to: 'Quotations',
   },
   {
@@ -231,12 +234,12 @@ function getIcon(routeName) {
     case 'Deals':
       return DealsIcon
     case 'Designs':
-      return DealsIcon
+      return DesignIcon
     //Routing the ItemsIcon
     case 'Items':
-      return DealsIcon
+      return ItemIcon
     case 'Quotations':
-      return DealsIcon
+      return QuotationsIcon
     case 'Contacts':
       return ContactsIcon
     case 'Organizations':
