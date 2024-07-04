@@ -8,7 +8,6 @@ from .twilio_handler import Twilio, IncomingCall, TwilioCallDetails
 from .utils import parse_mobile_no
 from frappe.utils import get_files_path
 from frappe.utils.file_manager import save_file
-import speech_recognition as sr
 
 @frappe.whitelist()
 def is_enabled():
@@ -106,67 +105,8 @@ def update_recording_info(**kwargs):
 		call_sid = args.CallSid
 		update_call_log(call_sid)
 		frappe.db.set_value("CRM Call Log", call_sid, "recording_url", recording_url)
-
-		# Define the file name and path
-		file_name = f'{call_sid}.wav'
-		file_path = get_files_path(file_name)
-
-        # Download the recording from Twilio
-		response = requests.get(recording_url, auth=('account sid', 'auth token'))
-		response.raise_for_status()
-
-        # Save the file in the ERPNext file system
-		with open(file_path, 'wb') as f:
-			f.write(response.content)
-
-        # Save the file in the ERPNext file manager
-		save_file(file_name, open(file_path, 'rb').read(), 'CRM Call Log', call_sid, is_private=False)
-
-		  # Extract text from audio file using speech recognition
-		extracted_text = extract_text_from_audio(file_path)
-
-		  # Get reference doctype and name from CRM Call Log
-		reference_doctype, reference_name = get_reference_from_call_log(call_sid)
-
-
-
-        # Insert extracted text into FCRM Note document
-		note_name = insert_extracted_text_as_note(call_sid, file_name, extracted_text, reference_doctype, reference_name)
-		frappe.db.set_value("CRM Call Log", call_sid, "note", note_name)
-
 	except:
 		frappe.log_error(title=_("Failed to capture Twilio recording"))
-
-def extract_text_from_audio(audio_file_path):
-    """Extract text from audio file using speech recognition."""
-    recognizer = sr.Recognizer()
-    with sr.AudioFile(audio_file_path) as source:
-        audio_data = recognizer.record(source)
-        try:
-            text = recognizer.recognize_google(audio_data)
-            return text
-        except sr.UnknownValueError:
-            return "Google Speech Recognition could not understand the audio"
-        except sr.RequestError as e:
-            return f"Could not request results from Google Speech Recognition service; {e}"
-		
-def get_reference_from_call_log(call_sid):
-    # Query CRM Call Log document to get reference doctype and name based on call_sid
-    call_log = frappe.get_doc("CRM Call Log", call_sid)
-    return call_log.reference_doctype, call_log.reference_docname
-
-		
-def insert_extracted_text_as_note(call_sid, file_name, extracted_text, reference_doctype, reference_name):
-	"""Insert extracted text into FCRM Note document."""
-	note_doc = frappe.new_doc("FCRM Note")
-	note_doc.title = file_name
-	note_doc.content = extracted_text
-	note_doc.reference_doctype = reference_doctype
-	note_doc.reference_docname = reference_name
-	note_doc.flags.ignore_permissions = True
-	note_doc.insert()
-	frappe.db.commit()
-	return note_doc.name
 
 @frappe.whitelist(allow_guest=True)
 def update_call_status_info(**kwargs):

@@ -17,7 +17,7 @@
           />
         </div>
       </div>
-      <Fields class="border-t pt-4" :sections="sections" :data="design" @updateField="handleFieldUpdate" />
+      <FieldsCpq class="border-t pt-4" :sections="sections" :data="design" @updateField="handleFieldUpdate" />
       <ErrorMessage class="mt-4" v-if="error" :message="__(error)" />
     </template>
     <template #actions>
@@ -34,7 +34,7 @@
 </template>
 
 <script setup>
-import Fields from '@/components/Fields.vue'
+import FieldsCpq from '@/components/FieldsCpq.vue'
 import { usersStore } from '@/stores/users'
 import { statusesStore } from '@/stores/statuses'
 import { Select } from 'frappe-ui'

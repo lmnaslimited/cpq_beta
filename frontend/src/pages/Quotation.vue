@@ -49,7 +49,7 @@
         v-model="quotation"
       />
     </Tabs>
-    <div class="flex w-[352px] flex-col justify-between border-l">
+    <div class="flex w-[400px] flex-col justify-between border-l">
       <div
         class="flex h-10.5 items-center border-b px-5 py-2.5 text-lg font-semibold"
       >
@@ -118,6 +118,34 @@
           </div>
         </template>
       </FileUploader>
+
+      <!-- Items Section -->
+      <div class="flex flex-col p-3">
+     <Section :is-opened="itemsSectionOpened" label="Items">
+        <div class="overflow-auto">
+          <table class="min-w-full divide-y divide-gray-200 table-auto">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Code</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rate</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="(item, index) in itemsFields" :key="item.item_code">
+                <td class="px-6 py-4 whitespace-nowrap">{{ index + 1 }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ item.item_code }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ item.qty }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ item.rate }}</td>
+                <td class="px-6 py-4 whitespace-nowrap">{{ item.amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </Section>
+      </div>
 
       <div
         v-if="detailSections.length"
@@ -233,6 +261,7 @@ onMounted(() => {
 
 const reload = ref(false)
 const showAssignmentModal = ref(false)
+const itemsSectionOpened = ref(true)
 
 function updateQuotation(fieldname, value, callback) {
   value = Array.isArray(fieldname) ? '' : value
@@ -327,6 +356,13 @@ function validateFile(file) {
     return __('Only PNG and JPG images are allowed')
   }
 }
+
+//for item table
+const itemsFields = computed(() => {
+  let item = quotation.data
+  if (!item) return []
+  return item.items_data
+})
 
 const detailSections = computed(() => {
   let data = quotation.data

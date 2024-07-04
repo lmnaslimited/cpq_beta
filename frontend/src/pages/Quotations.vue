@@ -11,7 +11,7 @@
       <Button
         variant="solid"
         :label="__('Create')"
-        @click="showDesignModal = true"
+         @click="handleClick"
       >
         <template #prefix><FeatherIcon name="plus" class="h-4" /></template>
       </Button>
@@ -67,6 +67,7 @@ import QuotationsListView from '@/components/ListViews/QuotationsListView.vue'
 import DesignModal from '@/components/Modals/DesignModal.vue'
 import { usersStore } from '@/stores/users'
 import { organizationsStore } from '@/stores/organizations'
+import { useRouter } from 'vue-router'
 
 import { statusesStore } from '@/stores/statuses'
 
@@ -88,6 +89,7 @@ const { getDealStatus } = statusesStore()
 
 const quotationsListView = ref(null)
 const showDesignModal = ref(false)
+const router = useRouter()
 
 // desigs data is loaded in the ViewControls component
 const quotations = ref({})
@@ -95,6 +97,10 @@ const loadMore = ref(1)
 const triggerResize = ref(1)
 const updatedPageCount = ref(20)
 const viewControls = ref(null)
+
+function handleClick() {
+    router.push({ name: 'QuotationCreation' })
+}
 
 // Rows
 const rows = computed(() => {

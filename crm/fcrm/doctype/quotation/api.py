@@ -4,23 +4,79 @@ from frappe import _
 from crm.api.doc import get_doctype_fields, get_assigned_users
 from crm.fcrm.doctype.crm_form_script.crm_form_script import get_form_script
 
+# @frappe.whitelist()
+# def get_quotation(name):
+#   Quotation = frappe.qb.DocType("Quotation")
+
+#   query = frappe.qb.from_(Quotation).select("*").where(Quotation.name == name).limit(1)
+
+#   quotation = query.run(as_dict=True)
+#   if not len(quotation):
+#     frappe.throw(_("Quotation not found"), frappe.DoesNotExistError)
+#   quotation = quotation.pop()
+
+#   quotation["doctype_fields"], quotation["all_fields"] = get_doctype_fields("Quotation", name)
+#   quotation["doctype"] = "Quotation"
+#   quotation["_form_script"] = get_form_script('Quotation')
+#   quotation["_assign"] = get_assigned_users("Quotation", quotation.name)
+#   return quotation
+
 @frappe.whitelist()
 def get_quotation(name):
-  Quotation = frappe.qb.DocType("Quotation")
+    Quotation = frappe.qb.DocType("Quotation")
 
-  query = frappe.qb.from_(Quotation).select("*").where(Quotation.name == name).limit(1)
+    # Fetch the Quotation document
+    query = frappe.qb.from_(Quotation).select("*").where(Quotation.name == name).limit(1)
+    quotation = query.run(as_dict=True)
+    
+    if not len(quotation):
+        frappe.throw(_("Quotation not found"), frappe.DoesNotExistError)
+    
+    quotation = quotation.pop()
 
-  quotation = query.run(as_dict=True)
-  if not len(quotation):
-    frappe.throw(_("Quotation not found"), frappe.DoesNotExistError)
-  quotation = quotation.pop()
+    # Fetch doctype fields and other metadata
+    doctype_fields, all_fields = get_doctype_fields("Quotation", name)
+    meta = frappe.get_meta("Quotation")
 
-  quotation["doctype_fields"], quotation["all_fields"] = get_doctype_fields("Quotation", name)
-  quotation["doctype"] = "Quotation"
-  quotation["_form_script"] = get_form_script('Quotation')
-  quotation["_assign"] = get_assigned_users("Quotation", quotation.name)
-  return quotation
+    # Initialize dictionaries to store metadata and data
+    items_fields = []
+    items_data = []
 
+    # Find the 'items' table field in the doctype meta
+    for field in meta.fields:
+        if field.fieldname == 'items' and field.fieldtype == 'Table':
+            child_table_name = field.options
+            child_table_fields = frappe.get_meta(child_table_name).fields
+            items_fields = [
+                {
+                    "fieldname": child_field.fieldname,
+                    "fieldtype": child_field.fieldtype,
+                    "label": child_field.label,
+                    "hidden": child_field.hidden,
+                    "reqd": child_field.reqd,
+                    "options": child_field.options,
+                    "read_only": child_field.read_only,
+                    "placeholder": child_field.default,
+                }
+                for child_field in child_table_fields
+            ]
+            
+            # Fetch actual data for the 'items' table
+            items_data = frappe.get_all(child_table_name, filters={'parent': name}, fields=["*"])
+            break
+
+    # Add the items fields and data to the quotation dictionary
+    quotation["items_fields"] = items_fields
+    quotation["items_data"] = items_data
+
+    # Optionally include other fields if needed
+    quotation["doctype_fields"] = doctype_fields
+    quotation["all_fields"] = all_fields
+    quotation["doctype"] = "Quotation"
+    quotation["_form_script"] = get_form_script('Quotation')
+    quotation["_assign"] = get_assigned_users("Quotation", quotation.name)
+
+    return quotation
 @frappe.whitelist()
 def get_item_variant():
   item_variant = frappe.get_list("Item", filters={"has_variants": 1})
