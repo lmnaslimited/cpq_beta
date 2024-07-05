@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { usersStore } from '@/stores/users'
 import { sessionStore } from '@/stores/session'
+import {getCustomRoutes } from '@/cpqCustom/cpqApi'
+
 
 const routes = [
   {
@@ -107,6 +109,10 @@ const routes = [
     name: 'Login',
     component: () => import('@/pages/Login.vue'),
   },
+
+  //Start of CPQ Changes
+  ...getCustomRoutes()
+  
 ]
 
 const handleMobileView = (componentName) => {
@@ -158,5 +164,6 @@ router.beforeEach(async (to, from, next) => {
     next()
   }
 })
+
 
 export default router

@@ -163,6 +163,14 @@ const links = [
     icon: EmailIcon,
     to: 'Email Templates',
   },
+
+  //this is the begin of CPQ changes
+  {
+    label: 'Designs',
+    icon: NoteIcon,
+    to: 'Designs',
+  },
+
 ]
 
 const allViews = computed(() => {
@@ -222,6 +230,8 @@ function getIcon(routeName, icon) {
       return NoteIcon
     case 'Call Logs':
       return PhoneIcon
+    case 'Designs':
+      return NoteIcon
     default:
       return PinIcon
   }
