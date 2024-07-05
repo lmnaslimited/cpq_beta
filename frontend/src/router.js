@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { usersStore } from '@/stores/users'
 import { sessionStore } from '@/stores/session'
+import {getCustomRoutes } from '@/cpqCustom/cpqApi'
+
 
 const routes = [
   {
@@ -107,19 +109,10 @@ const routes = [
     name: 'Login',
     component: () => import('@/pages/Login.vue'),
   },
-  // routing to the design page
-  {
-    path: '/designs',
-    name: 'Designs',
-    component: () => import('@/pages/Designs.vue'),
-    meta: { scrollPos: { top: 0, left: 0 } },
-  },
-  {
-    path: '/designs/:designId',
-    name: 'Design',
-    component: () => import('@/pages/Design.vue'),
-    props: true,
-  },
+
+  //Start of CPQ Changes
+  ...getCustomRoutes()
+  
 ]
 
 const handleMobileView = (componentName) => {
@@ -171,5 +164,6 @@ router.beforeEach(async (to, from, next) => {
     next()
   }
 })
+
 
 export default router

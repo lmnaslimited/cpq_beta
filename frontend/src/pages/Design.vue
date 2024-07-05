@@ -41,7 +41,7 @@
     </LayoutHeader>
     <div v-if="design?.data" class="flex h-full overflow-hidden">
       <Tabs v-model="tabIndex" v-slot="{ tab }" :tabs="tabs">
-        <Activities
+        <ActivitiesCpq
           ref="activities"
           doctype="Design"
           :title="tab.name"
@@ -245,7 +245,7 @@
   import OrganizationsIcon from '@/components/Icons/OrganizationsIcon.vue'
   import ContactsIcon from '@/components/Icons/ContactsIcon.vue'
   import LayoutHeader from '@/components/LayoutHeader.vue'
-  import Activities from '@/components/Activities.vue'
+  import ActivitiesCpq from '@/components/ActivitiesCpq.vue'
   import AssignmentModal from '@/components/Modals/AssignmentModal.vue'
   import SidePanelModal from '@/components/Settings/SidePanelModal.vue'
   import MultipleAvatar from '@/components/MultipleAvatar.vue'
