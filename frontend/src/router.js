@@ -107,6 +107,19 @@ const routes = [
     name: 'Login',
     component: () => import('@/pages/Login.vue'),
   },
+  // routing to the design page
+  {
+    path: '/designs',
+    name: 'Designs',
+    component: () => import('@/pages/Designs.vue'),
+    meta: { scrollPos: { top: 0, left: 0 } },
+  },
+  {
+    path: '/designs/:designId',
+    name: 'Design',
+    component: () => import('@/pages/Design.vue'),
+    props: true,
+  },
 ]
 
 const handleMobileView = (componentName) => {
