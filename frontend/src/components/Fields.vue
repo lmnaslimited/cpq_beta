@@ -21,6 +21,7 @@
         "
       >
         <div v-for="field in section.fields" :key="field.name">
+        <slot name="custom-fields" :field="field" :data="data">
           <div
             v-if="
               field.type == 'Check' ||
@@ -188,7 +189,9 @@
               v-model="data[field.name]"
               :disabled="Boolean(field.read_only)"
             />
+          
           </div>
+           </slot>
         </div>
       </div>
     </div>
